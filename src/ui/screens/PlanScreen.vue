@@ -27,7 +27,7 @@ function status(step: PlanStep): string {
     :lead="general ? 'No pasa nada si no lo sabes. Empieza por lo básico.' : 'Hazlo en este orden. Lo más urgente va primero.'"
   >
     <div class="summary">
-      <p class="summary__label" aria-live="polite">{{ progressLabel(steps, done) }}</p>
+      <p class="summary__label">{{ progressLabel(steps, done) }}</p>
       <div class="summary__bar" aria-hidden="true"><span :style="{ width: `${percent}%` }"></span></div>
     </div>
 
@@ -59,8 +59,8 @@ function status(step: PlanStep): string {
           </div>
         </div>
         <div v-else class="item__collapsed">
-          <UiButton variant="secondary" @click="$emit('open', step.id)">
-            Ver paso<span class="sr-only">: {{ step.title }}</span>
+          <UiButton variant="secondary" :aria-label="`Ver paso: ${step.title}`" @click="$emit('open', step.id)">
+            Ver paso
           </UiButton>
         </div>
       </li>
