@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import UiButton from "../UiButton.vue";
 
-defineEmits<{ start: [] }>();
+defineEmits<{ start: []; emergency: [] }>();
 </script>
 
 <template>
@@ -10,10 +10,14 @@ defineEmits<{ start: [] }>();
       <h1 id="start-title" class="hero__title" tabindex="-1" data-screen-heading>TE ROBARON.<br />ACTÚA YA.</h1>
       <div class="first-action">
         <div class="first-action__text">
-          <p class="first-action__eyebrow">ARMA TU PLAN EN 3 PASOS</p>
-          <p class="first-action__title">Dinos qué se llevaron y te decimos qué hacer primero</p>
+          <p class="first-action__eyebrow">SI SE LLEVARON TU CELULAR, EMPIEZA AQUÍ</p>
+          <p class="first-action__title">Bloquea tu línea desde otro teléfono</p>
         </div>
-        <UiButton arrow @click="$emit('start')">Empezar</UiButton>
+        <UiButton arrow @click="$emit('emergency')">Bloquear mi línea</UiButton>
+      </div>
+      <div class="main-action">
+        <p class="main-action__text">¿Te robaron otras cosas? Dinos qué se llevaron y te decimos qué hacer primero.</p>
+        <UiButton variant="inverse" arrow @click="$emit('start')">Empezar</UiButton>
       </div>
     </div>
   </section>
@@ -74,7 +78,33 @@ defineEmits<{ start: [] }>();
   line-height: 1.25;
 }
 
+.main-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.main-action__text {
+  flex: 1 1 20rem;
+  margin: 0;
+  color: var(--color-paper);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
 @media (max-width: 639px) {
+  .main-action {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .main-action__text {
+    flex: none;
+  }
+
   .hero__title {
     font-size: clamp(48px, 16vw, 96px);
   }

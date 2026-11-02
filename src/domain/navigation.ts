@@ -1,6 +1,6 @@
 import { isStepId, type StepId } from "./plan";
 
-export const SCREENS = ["inicio", "selector", "detalles", "plan", "paso", "completo"] as const;
+export const SCREENS = ["inicio", "emergencia", "selector", "detalles", "plan", "paso", "completo"] as const;
 export type Screen = (typeof SCREENS)[number];
 
 export interface Route {

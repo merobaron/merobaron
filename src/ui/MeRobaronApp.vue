@@ -16,6 +16,7 @@ import {
 import { isPlanComplete, markDone, markPending, progressLabel } from "../domain/progress";
 import DetailsScreen from "./screens/DetailsScreen.vue";
 import DoneScreen from "./screens/DoneScreen.vue";
+import EmergencyScreen from "./screens/EmergencyScreen.vue";
 import PlanScreen from "./screens/PlanScreen.vue";
 import SelectorScreen from "./screens/SelectorScreen.vue";
 import StartScreen from "./screens/StartScreen.vue";
@@ -25,6 +26,7 @@ const props = defineProps<{ content: Content; buildDate: string }>();
 
 const SCREEN_TITLES: Record<Screen, string> = {
   inicio: "Inicio",
+  emergencia: "Bloquea tu línea",
   selector: "Qué se llevaron",
   detalles: "Detalles",
   plan: "Tu plan",
@@ -45,6 +47,12 @@ const root = ref<HTMLElement | null>(null);
 const steps = computed(() => (selection.value ? buildPlan(selection.value, details.value, props.content, today.value) : []));
 const stepIds = computed(() => steps.value.map((step) => step.id));
 const activeStep = computed(() => steps.value.find((step) => step.id === route.value.stepId));
+const emergencyStep = computed(() =>
+  details.value.operatorId
+    ? buildPlan({ assets: ["phone"], unknown: false }, { operatorId: details.value.operatorId }, props.content, today.value)[0]
+    : undefined,
+);
+const lineBlocked = computed(() => done.value.includes("phone") && (selection.value?.assets.includes("phone") ?? false));
 const pendingOptional = computed(() => steps.value.filter((step) => step.optional && !done.value.includes(step.id)));
 
 function resolve(target: Route): Route {
@@ -94,6 +102,19 @@ function chooseAssets(assets: AssetId[]): void {
   navigate({ screen: needsDetails(selection.value) ? "detalles" : "plan" });
 }
 
+function chooseEmergencyOperator(operatorId: string): void {
+  details.value = { ...details.value, operatorId };
+  announcement.value = "Mostramos cómo bloquear tu línea.";
+}
+
+/** Flow B: the line is blocked, so the phone step is done and the main flow continues. */
+function confirmLineBlocked(): void {
+  const assets = selection.value?.assets ?? [];
+  selection.value = { assets: assets.includes("phone") ? assets : ["phone", ...assets], unknown: false };
+  done.value = markDone(done.value, "phone");
+  navigate({ screen: "selector" });
+}
+
 function chooseUnknown(): void {
   selection.value = { assets: [], unknown: true };
   navigate({ screen: "plan" });
@@ -139,11 +160,27 @@ onBeforeUnmount(() => {
   <div ref="root" class="app" :data-ready="ready ? 'true' : undefined">
     <p class="sr-only" aria-live="polite" aria-atomic="true">{{ announcement }}</p>
 
-    <StartScreen v-if="route.screen === 'inicio'" @start="navigate({ screen: 'selector' })" />
+    <StartScreen
+      v-if="route.screen === 'inicio'"
+      @start="navigate({ screen: 'selector' })"
+      @emergency="navigate({ screen: 'emergencia' })"
+    />
+
+    <EmergencyScreen
+      v-else-if="route.screen === 'emergencia'"
+      :operators="entitiesOfKind(content, 'operador')"
+      :operator-id="details.operatorId"
+      :step="emergencyStep"
+      :today="today"
+      @choose-operator="chooseEmergencyOperator"
+      @blocked="confirmLineBlocked"
+      @back="navigate({ screen: 'inicio' })"
+    />
 
     <SelectorScreen
       v-else-if="route.screen === 'selector'"
       :initial="selection?.assets ?? []"
+      :lead="lineBlocked ? 'Ya bloqueaste tu línea. ¿Se llevaron algo más? Marca todo lo que te falte.' : undefined"
       @submit="chooseAssets"
       @unknown="chooseUnknown"
     />
