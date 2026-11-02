@@ -339,3 +339,11 @@ onBeforeUnmount(() => {
     </DoneScreen>
   </div>
 </template>
+
+<style scoped>
+.app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+</style>

@@ -37,6 +37,7 @@ defineEmits<{ start: []; emergency: []; resume: []; startOver: [] }>();
 
 <style scoped>
 .hero {
+  flex: 1;
   background: var(--color-brand-main);
 }
 
