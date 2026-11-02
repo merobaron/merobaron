@@ -1,0 +1,43 @@
+<footer class="footer">
+  <div class="container footer__inner">
+    <p>MeRobaron orienta. No reemplaza a tu banco, a tu operador ni a las autoridades.</p>
+    <a href="https://github.com/merobaron/merobaron/issues/new">Corregir información</a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md) var(--space-3xl);
+    padding-block: var(--space-lg);
+  }
+
+  .footer p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .footer a {
+    color: var(--color-paper);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .footer a:hover {
+    color: var(--color-accent-main);
+  }
+
+  .footer a:focus-visible {
+    outline: var(--border-thin) solid var(--color-accent-main);
+    outline-offset: var(--space-2xs);
+  }
+</style>

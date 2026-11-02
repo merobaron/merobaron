@@ -17,9 +17,7 @@ describe("continueMessage", () => {
     expect(continueMessage(0)).toBe("Selecciona al menos una opción.");
   });
 
-  it("states that the selection was not stored or sent", () => {
-    expect(continueMessage(2)).toBe(
-      "Tu selección no se guardó ni se envió. Los siguientes pasos todavía no están disponibles.",
-    );
+  it("has nothing to say when the selection is valid", () => {
+    expect(continueMessage(2)).toBe("");
   });
 });

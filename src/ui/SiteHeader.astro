@@ -1,0 +1,33 @@
+<header class="header">
+  <div class="container header__inner">
+    <span class="logo">MEROBARON</span>
+    <span class="header__note">Gratis. Sin registro.</span>
+  </div>
+</header>
+
+<style>
+  .header {
+    background: var(--color-brand-main);
+    color: var(--color-paper);
+  }
+
+  .header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-md);
+    padding-block: var(--space-md);
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 32px;
+    line-height: 1.25;
+  }
+
+  .header__note {
+    font-size: 16px;
+    font-weight: 600;
+  }
+</style>
