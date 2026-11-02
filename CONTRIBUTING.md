@@ -2,6 +2,10 @@
 
 Un número falso aceptado aquí puede mandar a una víctima directo a un estafador. Por eso los cambios se revisan según su riesgo y **todo dato necesita una fuente oficial**. Un PR o issue sin ella se cierra.
 
+## Sin programar
+
+¿Conoces un teléfono, enlace o paso que falta o está mal? Abre un issue con el formulario **Proponer o corregir un dato**. Alguien del equipo lo convierte en PR.
+
 ## Flujo
 
 1. Abre un PR corto contra `main`.

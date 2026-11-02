@@ -1,0 +1,64 @@
+name: Proponer o corregir un dato
+description: Un teléfono, enlace o paso que falta, cambió o está mal. No necesitas programar.
+title: "[dato] "
+labels: [contenido]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por ayudar. **Sin una fuente oficial el issue se cierra**: debe ser una página de la propia entidad o de una autoridad pública, no un blog, noticia, foro ni captura. Dos personas mantenedoras comprobarán el dato en la fuente antes de publicarlo ([política](https://github.com/merobaron/merobaron/blob/main/docs/verificacion-de-datos.md)).
+
+        **No escribas datos personales:** ni cédulas, ni números de cuenta, ni IMEI, ni números de denuncia.
+  - type: dropdown
+    id: cambio
+    attributes:
+      label: ¿Qué quieres hacer?
+      options:
+        - Agregar una entidad nueva
+        - Corregir un dato existente
+        - Avisar que un dato ya no funciona
+    validations:
+      required: true
+  - type: input
+    id: entidad
+    attributes:
+      label: Entidad
+      placeholder: Nombre del operador, banco, billetera o autoridad
+    validations:
+      required: true
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo
+      options: [operador, banco, autoridad, identificacion]
+    validations:
+      required: true
+  - type: input
+    id: dato
+    attributes:
+      label: Dato correcto
+      description: La línea para reportar robo, el enlace o el paso que corresponde.
+    validations:
+      required: true
+  - type: input
+    id: fuente
+    attributes:
+      label: Fuente oficial
+      description: Enlace https a la página oficial de la entidad o autoridad donde aparece el dato tal cual.
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Opcional. Por ejemplo, "llamé el 2 de noviembre y me atendieron" o "el número viejo ya no existe".
+  - type: checkboxes
+    id: privacidad
+    attributes:
+      label: Confirmación
+      options:
+        - label: La fuente es una página oficial y el dato aparece ahí tal cual.
+          required: true
+        - label: No incluí datos personales míos ni de otras personas.
+          required: true
