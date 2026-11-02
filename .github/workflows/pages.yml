@@ -6,6 +6,8 @@ on:
   push:
     branches: [main]
 
+permissions: {}
+
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
