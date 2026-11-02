@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { parseDocument } from "yaml";
 import entitiesSource from "../../content/co/entidades.yaml?raw";
 import guidesSource from "../../content/co/guias.yaml?raw";
-import { entitySchema, guideSchema, toEntity, toGuide } from "./schema";
+import { entitySchema, guideSchema, isOfficial, toEntity, toGuide } from "./schema";
 
 // Same parser options Astro's file() loader uses, so dates arrive as Date objects.
 function parseYaml(source: string): Record<string, unknown>[] {
@@ -59,6 +59,11 @@ describe("entitySchema", () => {
     expect(entitySchema.safeParse({ ...validEntity, fuente: "http://ejemplo.com" }).success).toBe(false);
   });
 
+  it.each(["fuente", "enlace"])("rejects %s outside the official domains", (field) => {
+    const entry = { ...validEntity, [field]: "https://ejemplo.com.estafa.co/soporte" };
+    expect(entitySchema.safeParse(entry).success).toBe(false);
+  });
+
   it("rejects an expiry date that is not after the verification date", () => {
     const entry = { ...validEntity, vence: new Date("2026-10-01") };
     expect(entitySchema.safeParse(entry).success).toBe(false);
@@ -83,7 +88,21 @@ describe("entitySchema", () => {
   });
 });
 
+describe("isOfficial", () => {
+  it("accepts the domain and its subdomains, not lookalikes", () => {
+    expect(isOfficial("https://gov.co/a", ["gov.co"])).toBe(true);
+    expect(isOfficial("https://www.policia.gov.co/a", ["gov.co"])).toBe(true);
+    expect(isOfficial("https://falsogov.co/a", ["gov.co"])).toBe(false);
+    expect(isOfficial("https://gov.co.estafa.com/a", ["gov.co"])).toBe(false);
+  });
+});
+
 describe("guideSchema", () => {
+  it("rejects a guide with a source outside the official domains", () => {
+    expect(guideSchema.safeParse({ ...guides[0], fuente: "https://blog.com/robo" }).success).toBe(false);
+  });
+
+
   it("rejects a guide without steps", () => {
     const guide = { ...guides[0], pasos: [] };
     expect(guideSchema.safeParse(guide).success).toBe(false);

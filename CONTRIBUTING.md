@@ -1,6 +1,6 @@
 # Cómo contribuir
 
-Un número falso aceptado aquí puede mandar a una víctima directo a un estafador. Por eso los cambios se revisan según su riesgo.
+Un número falso aceptado aquí puede mandar a una víctima directo a un estafador. Por eso los cambios se revisan según su riesgo y **todo dato necesita una fuente oficial**. Un PR o issue sin ella se cierra.
 
 ## Flujo
 
@@ -8,11 +8,11 @@ Un número falso aceptado aquí puede mandar a una víctima directo a un estafad
 2. Usa [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/) en tus commits.
 3. Consigue las revisiones que correspondan:
 
-| Cambio | Revisiones | Requisito |
-|---|---|---|
-| Código | 1 | CI en verde cuando esté disponible |
-| Contenido general | 1 | Fuente enlazada en el PR |
-| Teléfonos y enlaces | 2 de mantenedores, sin auto-merge | Cumplir la [política de verificación](docs/verificacion-de-datos.md) |
+| Cambio                                  | Revisiones                        | Requisito                                                            |
+| --------------------------------------- | --------------------------------- | -------------------------------------------------------------------- |
+| Código                                  | 1                                 | CI en verde cuando esté disponible                                   |
+| Contenido general                       | 1                                 | Cumplir la [política de verificación](docs/verificacion-de-datos.md) |
+| Teléfonos, enlaces y dominios oficiales | 2 de mantenedores, sin auto-merge | Cumplir la [política de verificación](docs/verificacion-de-datos.md) |
 
 ## Datos personales
 

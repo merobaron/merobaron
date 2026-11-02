@@ -1,5 +1,7 @@
 import { z } from "astro/zod";
 import type { Entity, Guide } from "../domain/content";
+// ponytail: one country for now; pass the list in when a second country arrives.
+import official from "../../content/co/fuentes-oficiales.json";
 
 const isoDate = z
   .union([z.date(), z.iso.date()], {
@@ -9,10 +11,20 @@ const isoDate = z
 
 const httpsUrl = z.url({ protocol: /^https$/, error: "Usa un enlace https." });
 
+/** True when the URL is on an official domain or one of its subdomains. */
+export function isOfficial(url: string, domains: readonly string[] = official.dominios): boolean {
+  const host = new URL(url).hostname;
+  return domains.some((domain) => host === domain || host.endsWith(`.${domain}`));
+}
+
+const officialUrl = httpsUrl.refine(isOfficial, {
+  error: "Usa un enlace de un dominio oficial listado en content/co/fuentes-oficiales.json.",
+});
+
 const entityKind = z.enum(["operador", "banco", "autoridad", "identificacion"]);
 
 const verification = {
-  fuente: httpsUrl,
+  fuente: officialUrl,
   verificado: isoDate,
   vence: isoDate,
 };
@@ -33,7 +45,7 @@ export const entitySchema = z
     nombre: z.string().min(1),
     tipo: entityKind,
     linea_robo: z.string().min(1).optional(),
-    enlace: httpsUrl.optional(),
+    enlace: officialUrl.optional(),
     ...verification,
   })
   .superRefine(checkDates);
