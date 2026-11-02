@@ -1,0 +1,331 @@
+---
+import "@fontsource/anton/400.css";
+import "@fontsource/archivo/400.css";
+import "@fontsource/archivo/600.css";
+import "@fontsource/archivo/700.css";
+import "../ui/tokens.css";
+import AssetSelector from "../ui/AssetSelector.vue";
+
+const steps = ["1. Qué tenías", "2. Detalles", "3. Tu plan"];
+const faviconUrl = `${import.meta.env.BASE_URL}/favicon.svg`.replace("//", "/");
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta
+      name="description"
+      content="Guía abierta para saber qué hacer después de un robo: bloqueos, claves y denuncia, sin registro."
+    />
+    <link rel="icon" type="image/svg+xml" href={faviconUrl} />
+    <title>MeRobaron</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header__inner">
+        <span class="logo">MEROBARON</span>
+        <span class="header__note">Gratis. Sin registro.</span>
+      </div>
+    </header>
+
+    <div class="notice" role="status">
+      <p class="container">
+        Sitio en construcción. Todavía no contiene pasos ni datos verificados. Si te acaban de robar, contacta a tu banco y a tu operador por sus canales oficiales.
+      </p>
+    </div>
+
+    <main>
+      <section class="hero">
+        <div class="container hero__inner">
+          <h1 class="hero__title">TE ROBARON.<br />ACTÚA YA.</h1>
+          <div class="first-action">
+            <div class="first-action__text">
+              <p class="first-action__eyebrow">SI SE LLEVARON TU CELULAR, EMPIEZA AQUÍ</p>
+              <p class="first-action__title">Bloquea tu línea desde otro teléfono</p>
+            </div>
+            <a class="cta" href="#que-se-llevaron">
+              Empezar
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="selection" id="que-se-llevaron">
+        <div class="container selection__inner">
+          <ol class="progress">
+            {steps.map((step, index) => (
+              <li class:list={["progress__step", { "progress__step--current": index === 0 }]} aria-current={index === 0 ? "step" : undefined}>
+                {step}
+              </li>
+            ))}
+          </ol>
+          <h2 class="selection__title">¿QUÉ SE LLEVARON?</h2>
+          <AssetSelector client:load />
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <p>MeRobaron orienta. No reemplaza a tu banco, a tu operador ni a las autoridades.</p>
+        <a href="https://github.com/merobaron/merobaron/issues/new">Corregir información</a>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-text);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+</style>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: calc(1200px + 2 * var(--space-lg));
+    margin-inline: auto;
+    padding-inline: var(--space-lg);
+  }
+
+  .header {
+    background: var(--color-brand-main);
+    color: var(--color-paper);
+  }
+
+  .header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-md);
+    padding-block: var(--space-md);
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 32px;
+    line-height: 1.25;
+  }
+
+  .header__note {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .notice {
+    background: var(--color-accent-faded);
+    color: var(--color-ink);
+  }
+
+  .notice p {
+    margin-block: 0;
+    padding-block: var(--space-sm);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .hero {
+    background: var(--color-brand-main);
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-xl) var(--space-4xl);
+  }
+
+  .hero__title {
+    margin: 0;
+    color: var(--color-paper);
+    font-family: var(--font-display);
+    font-size: clamp(64px, 11vw, 160px);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .first-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--color-ink);
+  }
+
+  .first-action__text {
+    display: grid;
+    gap: var(--space-2xs);
+    min-width: 0;
+  }
+
+  .first-action__eyebrow {
+    margin: 0;
+    color: var(--color-accent-main);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .first-action__title {
+    margin: 0;
+    color: var(--color-paper);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .cta {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    min-height: 56px;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-accent-main);
+    color: var(--color-ink);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    text-decoration: none;
+    transition: background-color var(--motion-fast);
+  }
+
+  .cta:hover {
+    background: var(--color-accent-light);
+  }
+
+  .cta:focus-visible {
+    outline: var(--border-thick) solid var(--color-accent-light);
+    outline-offset: var(--space-3xs);
+  }
+
+  .cta svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+
+  .selection__inner {
+    display: grid;
+    gap: var(--space-lg);
+    padding-block: var(--space-4xl);
+  }
+
+  .progress {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .progress__step {
+    padding-top: calc(8px + var(--space-xs));
+    border-top: 0;
+    background: linear-gradient(var(--color-line), var(--color-line)) top / 100% 8px no-repeat;
+    color: var(--color-ink-soft);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .progress__step--current {
+    background-image: linear-gradient(var(--color-brand-main), var(--color-brand-main));
+    color: var(--color-ink);
+  }
+
+  .selection__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1.125;
+  }
+
+  .footer {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md) var(--space-3xl);
+    padding-block: var(--space-lg);
+  }
+
+  .footer p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .footer a {
+    color: var(--color-paper);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .footer a:hover {
+    color: var(--color-accent-main);
+  }
+
+  .footer a:focus-visible {
+    outline: var(--border-thin) solid var(--color-accent-main);
+    outline-offset: var(--space-2xs);
+  }
+
+  @media (max-width: 639px) {
+    .container {
+      padding-inline: var(--space-md);
+    }
+
+    .first-action {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .first-action__title {
+      font-size: 24px;
+    }
+
+    .selection__title {
+      font-size: 44px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta {
+      transition: none;
+    }
+  }
+</style>
