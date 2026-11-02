@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 4322;
 
-// Run `npm run build` first: the tests use the production build served by `astro preview`.
+// Run `pnpm build` first: the tests use the production build served by `astro preview`.
 export default defineConfig({
   testDir: "e2e",
   testMatch: "**/*.e2e.ts",
@@ -21,7 +21,7 @@ export default defineConfig({
     { name: "desktop-1440", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
   ],
   webServer: {
-    command: `npx astro preview --port ${PORT} --ignore-lock`,
+    command: `pnpm exec astro preview --port ${PORT} --ignore-lock`,
     url: `http://localhost:${PORT}/merobaron/`,
     reuseExistingServer: !process.env.CI,
   },

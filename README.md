@@ -25,10 +25,10 @@ tokens/       Tokens de diseño en JSON
 ## Desarrollo
 
 ```sh
-npm install
-npm run dev
-npm test
-npm run build
+pnpm install
+pnpm dev
+pnpm test
+pnpm build
 ```
 
 ## Contribuir
