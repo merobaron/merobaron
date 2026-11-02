@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onErrorCaptured, onMounted, ref, watch } from "vue";
 import { todayIso, type Content } from "../domain/content";
 import { START, parseHash, resolveRoute, sameRoute, toHash, type Route, type Screen } from "../domain/navigation";
 import {
@@ -17,6 +17,8 @@ import { isPlanComplete, markDone, markPending, progressLabel } from "../domain/
 import { emptyReport, type ReportDraft } from "../domain/report";
 import { clearPlan, loadPlan, savePlan } from "../domain/storage";
 import DataNotice from "./DataNotice.vue";
+import ErrorState from "./ErrorState.vue";
+import OfflineBanner from "./OfflineBanner.vue";
 import DeleteScreen from "./screens/DeleteScreen.vue";
 import ReportScreen from "./screens/ReportScreen.vue";
 import DetailsScreen from "./screens/DetailsScreen.vue";
@@ -53,6 +55,9 @@ const report = ref<ReportDraft>(emptyReport());
 /** Whether the last write to localStorage worked. */
 const saved = ref(false);
 const flash = ref("");
+const online = ref(true);
+/** Flow G: a screen failed to render. Show the basic steps and a retry instead of a blank page. */
+const failed = ref(false);
 const announcement = ref("");
 const root = ref<HTMLElement | null>(null);
 
@@ -109,6 +114,19 @@ function syncFromLocation(moveFocus: boolean): void {
   }
   if (!sameRoute(route.value, resolved)) show(resolved, moveFocus);
 }
+
+function updateOnline(): void {
+  online.value = navigator.onLine;
+}
+
+function retry(): void {
+  window.location.reload();
+}
+
+onErrorCaptured(() => {
+  failed.value = true;
+  return false;
+});
 
 function onPopState(): void {
   syncFromLocation(true);
@@ -209,12 +227,17 @@ onMounted(() => {
   today.value = todayIso();
   restore();
   window.addEventListener("popstate", onPopState);
+  window.addEventListener("online", updateOnline);
+  window.addEventListener("offline", updateOnline);
+  updateOnline();
   syncFromLocation(false);
   ready.value = true;
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("popstate", onPopState);
+  window.removeEventListener("online", updateOnline);
+  window.removeEventListener("offline", updateOnline);
 });
 </script>
 
@@ -222,8 +245,12 @@ onBeforeUnmount(() => {
   <div ref="root" class="app" :data-ready="ready ? 'true' : undefined">
     <p class="sr-only" aria-live="polite" aria-atomic="true">{{ announcement }}</p>
 
+    <OfflineBanner v-if="!online" />
+
+    <ErrorState v-if="failed" :guide="content.guides.find((guide) => guide.id === 'general')" @retry="retry" />
+
     <StartScreen
-      v-if="route.screen === 'inicio'"
+      v-else-if="route.screen === 'inicio'"
       :saved-progress="savedProgress"
       :flash="flash"
       @start="navigate({ screen: 'selector' })"

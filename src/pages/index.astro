@@ -4,14 +4,29 @@ import { toEntity, toGuide } from "../data/schema";
 import { todayIso, type Content } from "../domain/content";
 import Base from "../layouts/Base.astro";
 import MeRobaronApp from "../ui/MeRobaronApp.vue";
+import StaticFallback from "../ui/StaticFallback.astro";
 
 const content: Content = {
   entities: (await getCollection("entidades")).map((entry) => toEntity(entry.data)),
   guides: (await getCollection("guias")).map((entry) => toGuide(entry.data)),
 };
 const buildDate = todayIso();
+const generalGuide = content.guides.find((guide) => guide.id === "general");
 ---
 
 <Base>
   <MeRobaronApp client:load content={content} buildDate={buildDate} />
+  <noscript><StaticFallback guide={generalGuide} /></noscript>
+  <StaticFallback guide={generalGuide} id="app-fallback" hidden />
 </Base>
+
+<script is:inline>
+  // Flow G: if the interactive plan never hydrates (a script failed to load), show the basic steps.
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      if (document.querySelector("[data-ready]")) return;
+      var fallback = document.getElementById("app-fallback");
+      if (fallback) fallback.hidden = false;
+    }, 4000);
+  });
+</script>
