@@ -92,6 +92,11 @@ describe("parseSavedPlan", () => {
     });
   });
 
+  it("keeps a valid report draft", () => {
+    const report = { when: "Hoy", where: "Calle 1", what: "", filed: "yes", number: "DEN-0000" };
+    expect(parseSavedPlan({ ...plan, report })?.report).toEqual(report);
+  });
+
   it("keeps a 'No lo sé' plan", () => {
     expect(parseSavedPlan({ version: 1, selection: { assets: [], unknown: true }, done: [] })?.selection.unknown).toBe(
       true,

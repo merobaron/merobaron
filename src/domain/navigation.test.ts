@@ -17,7 +17,7 @@ describe("parseHash", () => {
 
 describe("toHash", () => {
   it("round-trips routes", () => {
-    for (const hash of ["#/", "#/emergencia", "#/selector", "#/detalles", "#/plan", "#/paso/card", "#/completo"]) {
+    for (const hash of ["#/", "#/emergencia", "#/selector", "#/detalles", "#/plan", "#/paso/card", "#/denuncia", "#/borrar", "#/completo"]) {
       expect(toHash(parseHash(hash))).toBe(hash);
     }
   });
@@ -26,11 +26,13 @@ describe("toHash", () => {
 describe("resolveRoute", () => {
   it("sends the person to the selector when there is no selection", () => {
     expect(resolveRoute({ screen: "plan" }, false, [])).toEqual({ screen: "selector" });
+    expect(resolveRoute({ screen: "denuncia" }, false, [])).toEqual({ screen: "selector" });
   });
 
   it("keeps screens that need no selection", () => {
     expect(resolveRoute({ screen: "selector" }, false, [])).toEqual({ screen: "selector" });
     expect(resolveRoute({ screen: "emergencia" }, false, [])).toEqual({ screen: "emergencia" });
+    expect(resolveRoute({ screen: "borrar" }, false, [])).toEqual({ screen: "borrar" });
   });
 
   it("sends a step that is not in the plan back to the plan", () => {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { todayIso, type Content } from "../domain/content";
 import { START, parseHash, resolveRoute, sameRoute, toHash, type Route, type Screen } from "../domain/navigation";
 import {
@@ -14,6 +14,11 @@ import {
   type StepId,
 } from "../domain/plan";
 import { isPlanComplete, markDone, markPending, progressLabel } from "../domain/progress";
+import { emptyReport, type ReportDraft } from "../domain/report";
+import { clearPlan, loadPlan, savePlan } from "../domain/storage";
+import DataNotice from "./DataNotice.vue";
+import DeleteScreen from "./screens/DeleteScreen.vue";
+import ReportScreen from "./screens/ReportScreen.vue";
 import DetailsScreen from "./screens/DetailsScreen.vue";
 import DoneScreen from "./screens/DoneScreen.vue";
 import EmergencyScreen from "./screens/EmergencyScreen.vue";
@@ -21,6 +26,7 @@ import PlanScreen from "./screens/PlanScreen.vue";
 import SelectorScreen from "./screens/SelectorScreen.vue";
 import StartScreen from "./screens/StartScreen.vue";
 import StepScreen from "./screens/StepScreen.vue";
+import UiButton from "./UiButton.vue";
 
 const props = defineProps<{ content: Content; buildDate: string }>();
 
@@ -31,6 +37,8 @@ const SCREEN_TITLES: Record<Screen, string> = {
   detalles: "Detalles",
   plan: "Tu plan",
   paso: "Paso del plan",
+  denuncia: "Prepara tu denuncia",
+  borrar: "Borrar mis datos",
   completo: "Plan completo",
 };
 
@@ -41,6 +49,10 @@ const route = ref<Route>(START);
 const selection = ref<Selection | null>(null);
 const details = ref<Details>({});
 const done = ref<StepId[]>([]);
+const report = ref<ReportDraft>(emptyReport());
+/** Whether the last write to localStorage worked. */
+const saved = ref(false);
+const flash = ref("");
 const announcement = ref("");
 const root = ref<HTMLElement | null>(null);
 
@@ -53,6 +65,10 @@ const emergencyStep = computed(() =>
     : undefined,
 );
 const lineBlocked = computed(() => done.value.includes("phone") && (selection.value?.assets.includes("phone") ?? false));
+/** Flow E: a plan saved on this device can be continued from the start screen. */
+const savedProgress = computed(() =>
+  saved.value && selection.value ? progressLabel(steps.value, done.value) : undefined,
+);
 const pendingOptional = computed(() => steps.value.filter((step) => step.optional && !done.value.includes(step.id)));
 
 function resolve(target: Route): Route {
@@ -69,6 +85,7 @@ async function focusAfterRender(...selectors: string[]): Promise<void> {
 }
 
 function show(target: Route, moveFocus: boolean): void {
+  if (target.screen !== "inicio") flash.value = "";
   route.value = target;
   announcement.value = SCREEN_TITLES[target.screen];
   if (moveFocus) void focusAfterRender("[data-screen-heading]");
@@ -95,6 +112,48 @@ function syncFromLocation(moveFocus: boolean): void {
 
 function onPopState(): void {
   syncFromLocation(true);
+}
+
+function persist(): void {
+  if (!selection.value) return;
+  saved.value = savePlan({
+    version: 1,
+    selection: selection.value,
+    details: details.value,
+    done: done.value,
+    report: report.value,
+  });
+}
+
+function restore(): void {
+  const plan = loadPlan();
+  if (!plan) return;
+  selection.value = plan.selection;
+  details.value = plan.details;
+  done.value = plan.done;
+  report.value = plan.report ?? emptyReport();
+  saved.value = true;
+}
+
+/** Flow F: forget everything on this device and start clean. */
+function deleteData(): void {
+  clearPlan();
+  selection.value = null;
+  details.value = {};
+  done.value = [];
+  report.value = emptyReport();
+  saved.value = false;
+  navigate(START, { replace: true });
+  flash.value = "Borramos tus datos de este dispositivo.";
+  announcement.value = flash.value;
+}
+
+function cancelDelete(): void {
+  navigate({ screen: selection.value ? "plan" : "inicio" });
+}
+
+function finishReport(): void {
+  completeStep("report", "paso");
 }
 
 function chooseAssets(assets: AssetId[]): void {
@@ -144,8 +203,11 @@ function reopenStep(id: StepId): void {
   done.value = markPending(done.value, id);
 }
 
+watch([selection, details, done, report], persist, { deep: true });
+
 onMounted(() => {
   today.value = todayIso();
+  restore();
   window.addEventListener("popstate", onPopState);
   syncFromLocation(false);
   ready.value = true;
@@ -162,8 +224,12 @@ onBeforeUnmount(() => {
 
     <StartScreen
       v-if="route.screen === 'inicio'"
+      :saved-progress="savedProgress"
+      :flash="flash"
       @start="navigate({ screen: 'selector' })"
       @emergency="navigate({ screen: 'emergencia' })"
+      @resume="navigate({ screen: 'plan' })"
+      @start-over="navigate({ screen: 'borrar' })"
     />
 
     <EmergencyScreen
@@ -206,7 +272,10 @@ onBeforeUnmount(() => {
       @open="navigate({ screen: 'paso', stepId: $event })"
       @mark-done="completeStep($event, 'plan')"
       @change-selection="navigate({ screen: 'selector' })"
-    />
+      @report="navigate({ screen: 'denuncia' })"
+    >
+      <DataNotice :saved="saved" @delete="navigate({ screen: 'borrar' })" />
+    </PlanScreen>
 
     <StepScreen
       v-else-if="route.screen === 'paso' && activeStep"
@@ -216,13 +285,30 @@ onBeforeUnmount(() => {
       @mark-done="completeStep(activeStep.id, 'paso')"
       @mark-pending="reopenStep(activeStep.id)"
       @back="navigate({ screen: 'plan' })"
+    >
+      <UiButton v-if="activeStep.id === 'report'" arrow @click="navigate({ screen: 'denuncia' })">
+        Preparar el resumen
+      </UiButton>
+    </StepScreen>
+
+    <ReportScreen
+      v-else-if="route.screen === 'denuncia' && selection"
+      :draft="report"
+      :assets="selection.assets"
+      @update="report = $event"
+      @finish="finishReport"
+      @back="navigate({ screen: 'plan' })"
     />
+
+    <DeleteScreen v-else-if="route.screen === 'borrar'" @confirm="deleteData" @cancel="cancelDelete" />
 
     <DoneScreen
       v-else-if="route.screen === 'completo'"
       :pending-optional="pendingOptional"
       @open="navigate({ screen: 'paso', stepId: $event })"
       @back="navigate({ screen: 'plan' })"
-    />
+    >
+      <DataNotice :saved="saved" @delete="navigate({ screen: 'borrar' })" />
+    </DoneScreen>
   </div>
 </template>

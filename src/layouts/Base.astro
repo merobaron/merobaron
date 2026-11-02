@@ -94,6 +94,16 @@ const faviconUrl = `${import.meta.env.BASE_URL}/favicon.svg`.replace("//", "/");
       scroll-behavior: auto;
     }
   }
+
+  @media print {
+    body > header,
+    body > footer,
+    .notice,
+    .skip-link,
+    .no-print {
+      display: none !important;
+    }
+  }
 </style>
 
 <style>

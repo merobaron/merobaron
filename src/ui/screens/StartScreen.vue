@@ -1,13 +1,25 @@
 <script setup lang="ts">
 import UiButton from "../UiButton.vue";
 
-defineEmits<{ start: []; emergency: [] }>();
+defineProps<{ savedProgress?: string; flash?: string }>();
+defineEmits<{ start: []; emergency: []; resume: []; startOver: [] }>();
 </script>
 
 <template>
   <section class="hero" aria-labelledby="start-title">
     <div class="container hero__inner">
+      <p v-if="flash" class="flash" role="status">{{ flash }}</p>
       <h1 id="start-title" class="hero__title" tabindex="-1" data-screen-heading>TE ROBARON.<br />ACTÚA YA.</h1>
+      <div v-if="savedProgress" class="resume">
+        <div class="resume__text">
+          <p class="resume__eyebrow">TIENES UN PLAN GUARDADO EN ESTE DISPOSITIVO</p>
+          <p class="resume__progress">{{ savedProgress }}</p>
+        </div>
+        <div class="resume__actions">
+          <UiButton arrow @click="$emit('resume')">Continuar mi plan</UiButton>
+          <UiButton variant="secondary" @click="$emit('startOver')">Empezar de nuevo</UiButton>
+        </div>
+      </div>
       <div class="first-action">
         <div class="first-action__text">
           <p class="first-action__eyebrow">SI SE LLEVARON TU CELULAR, EMPIEZA AQUÍ</p>
@@ -45,6 +57,50 @@ defineEmits<{ start: []; emergency: [] }>();
 
 .hero__title:focus {
   outline: none;
+}
+
+.flash {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-success-faded);
+  color: var(--color-ink);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.resume {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-paper);
+}
+
+.resume__text {
+  display: grid;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.resume__eyebrow {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.resume__progress {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.resume__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
 }
 
 .first-action {
@@ -103,6 +159,15 @@ defineEmits<{ start: []; emergency: [] }>();
 
   .main-action__text {
     flex: none;
+  }
+
+  .resume {
+    padding: var(--space-md);
+  }
+
+  .resume__actions {
+    display: grid;
+    width: 100%;
   }
 
   .hero__title {

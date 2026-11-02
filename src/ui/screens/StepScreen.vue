@@ -18,9 +18,11 @@ defineEmits<{ markDone: []; markPending: []; back: [] }>();
       </p>
     </template>
     <StepDetail :step="step" :today="today" />
-    <slot />
     <div class="actions">
-      <UiButton v-if="!done" @click="$emit('markDone')">Marcar como hecho</UiButton>
+      <slot />
+      <UiButton v-if="!done" :variant="step.id === 'report' ? 'secondary' : 'primary'" @click="$emit('markDone')">
+        {{ step.id === "report" ? "Ya la puse" : "Marcar como hecho" }}
+      </UiButton>
       <UiButton v-else variant="secondary" @click="$emit('markPending')">Marcar como pendiente</UiButton>
       <UiButton variant="secondary" @click="$emit('back')">Volver al plan</UiButton>
     </div>

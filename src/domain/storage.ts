@@ -1,4 +1,5 @@
 import { isAssetId, isStepId, type Details, type Selection, type StepId } from "./plan";
+import { parseReport, type ReportDraft } from "./report";
 
 /** The only key the site writes. Bump the version suffix on breaking changes. */
 export const STORAGE_KEY = "merobaron:plan:v1";
@@ -14,6 +15,7 @@ export interface SavedPlan {
   selection: Selection;
   details: Details;
   done: StepId[];
+  report?: ReportDraft;
 }
 
 /** Returns localStorage when it is usable, or null (private mode, blocked site data, SSR). */
@@ -52,12 +54,15 @@ export function parseSavedPlan(value: unknown): SavedPlan | null {
   const unknown = value.selection.unknown === true;
   if (assets.length === 0 && !unknown) return null;
   const done = Array.isArray(value.done) ? value.done.filter(isStepId) : [];
-  return {
+  const plan: SavedPlan = {
     version: 1,
     selection: { assets: [...new Set(assets)], unknown },
     details: parseDetails(value.details),
     done: [...new Set(done)],
   };
+  const report = parseReport(value.report);
+  if (report) plan.report = report;
+  return plan;
 }
 
 export function loadPlan(storage: StorageLike | null = getStorage()): SavedPlan | null {

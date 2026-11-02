@@ -1,6 +1,6 @@
 import { isStepId, type StepId } from "./plan";
 
-export const SCREENS = ["inicio", "emergencia", "selector", "detalles", "plan", "paso", "completo"] as const;
+export const SCREENS = ["inicio", "emergencia", "selector", "detalles", "plan", "paso", "denuncia", "borrar", "completo"] as const;
 export type Screen = (typeof SCREENS)[number];
 
 export interface Route {
@@ -9,7 +9,7 @@ export interface Route {
 }
 
 /** Screens that only make sense once the person chose what was taken. */
-const NEEDS_SELECTION: Screen[] = ["detalles", "plan", "paso", "completo"];
+const NEEDS_SELECTION: Screen[] = ["detalles", "plan", "paso", "denuncia", "completo"];
 
 export const START: Route = { screen: "inicio" };
 

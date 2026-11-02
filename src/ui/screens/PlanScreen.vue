@@ -8,7 +8,7 @@ import StepDetail from "../StepDetail.vue";
 import UiButton from "../UiButton.vue";
 
 const props = defineProps<{ steps: PlanStep[]; done: StepId[]; today: string; general: boolean }>();
-defineEmits<{ open: [id: StepId]; markDone: [id: StepId]; changeSelection: [] }>();
+defineEmits<{ open: [id: StepId]; markDone: [id: StepId]; changeSelection: []; report: [] }>();
 
 const current = computed(() => currentStep(props.steps, props.done));
 const percent = computed(() => (props.steps.length === 0 ? 0 : (countDone(props.steps, props.done) / props.steps.length) * 100));
@@ -53,7 +53,8 @@ function status(step: PlanStep): string {
         <div v-if="current?.id === step.id" class="item__body">
           <StepDetail :step="step" :today="today" />
           <div class="actions">
-            <UiButton @click="$emit('markDone', step.id)">Marcar como hecho</UiButton>
+            <UiButton v-if="step.id === 'report'" arrow @click="$emit('report')">Preparar el resumen</UiButton>
+            <UiButton v-else @click="$emit('markDone', step.id)">Marcar como hecho</UiButton>
             <UiButton variant="secondary" @click="$emit('open', step.id)">Ver paso</UiButton>
           </div>
         </div>

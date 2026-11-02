@@ -5,7 +5,7 @@ const steps = ["1. Qué tenías", "2. Detalles", "3. Tu plan"];
 </script>
 
 <template>
-  <ol class="progress" aria-label="Progreso">
+  <ol class="progress no-print" aria-label="Progreso">
     <li
       v-for="(step, index) in steps"
       :key="step"
