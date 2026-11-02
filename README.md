@@ -22,6 +22,15 @@ src/ui/       Componentes del sistema de diseño
 tokens/       Tokens de diseño en JSON
 ```
 
+## Desarrollo
+
+```sh
+npm install
+npm run dev
+npm test
+npm run build
+```
+
 ## Contribuir
 
 Lee [CONTRIBUTING.md](CONTRIBUTING.md) y la [política de verificación de datos](docs/verificacion-de-datos.md). Para reportar una vulnerabilidad, sigue [SECURITY.md](SECURITY.md).
