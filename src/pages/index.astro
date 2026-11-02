@@ -20,7 +20,7 @@ const generalGuide = content.guides.find((guide) => guide.id === "general");
   <StaticFallback guide={generalGuide} id="app-fallback" hidden />
 </Base>
 
-<script is:inline>
+<script>
   // Flow G: if the interactive plan never hydrates (a script failed to load), show the basic steps.
   window.addEventListener("load", function () {
     setTimeout(function () {

@@ -6,4 +6,15 @@ export default defineConfig({
   site: "https://merobaron.github.io",
   base: "/merobaron",
   integrations: [vue(), precache()],
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data:",
+        "object-src 'none'",
+        "base-uri 'none'",
+        "form-action 'none'",
+      ],
+    },
+  },
 });

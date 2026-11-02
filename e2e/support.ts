@@ -4,7 +4,7 @@ import { expect, test as base, type Page } from "@playwright/test";
 export const STORAGE_KEY = "merobaron:plan:v1";
 
 /** Fails a test if the page requests anything outside the site. */
-export const test = base.extend<{ externalRequests: string[] }>({
+export const test = base.extend<{ externalRequests: string[]; cspViolations: string[] }>({
   externalRequests: [
     async ({ page, baseURL }, use) => {
       const origin = new URL(baseURL ?? "").origin;
@@ -14,6 +14,17 @@ export const test = base.extend<{ externalRequests: string[] }>({
       });
       await use(external);
       expect(external, "external requests").toEqual([]);
+    },
+    { auto: true },
+  ],
+  cspViolations: [
+    async ({ page }, use) => {
+      const violations: string[] = [];
+      page.on("console", (message) => {
+        if (message.text().includes("Content Security Policy")) violations.push(message.text());
+      });
+      await use(violations);
+      expect(violations, "CSP violations").toEqual([]);
     },
     { auto: true },
   ],
