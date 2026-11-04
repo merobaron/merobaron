@@ -3,8 +3,7 @@ import vue from "@astrojs/vue";
 import precache from "./scripts/precache-integration.mjs";
 
 export default defineConfig({
-  site: "https://merobaron.github.io",
-  base: "/merobaron",
+  site: "https://merobaron.co",
   integrations: [vue(), precache()],
   security: {
     csp: {

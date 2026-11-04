@@ -11,7 +11,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
   use: {
-    baseURL: `http://localhost:${PORT}/merobaron/`,
+    baseURL: `http://localhost:${PORT}/`,
     // Most tests run without the service worker so each one starts from the network. The offline test enables it.
     serviceWorkers: "block",
     trace: "retain-on-failure",
@@ -22,7 +22,7 @@ export default defineConfig({
   ],
   webServer: {
     command: `pnpm exec astro preview --port ${PORT} --ignore-lock`,
-    url: `http://localhost:${PORT}/merobaron/`,
+    url: `http://localhost:${PORT}/`,
     reuseExistingServer: !process.env.CI,
   },
 });
