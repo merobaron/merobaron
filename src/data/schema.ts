@@ -36,10 +36,7 @@ const verification = {
   publicado: isoDate.optional(),
 };
 
-function checkDates(
-  data: { verificado: string; vence: string; publicado?: string },
-  ctx: z.RefinementCtx,
-): void {
+function checkDates(data: { verificado: string; vence: string; publicado?: string }, ctx: z.RefinementCtx): void {
   if (data.publicado && data.publicado > data.verificado) {
     ctx.addIssue({
       code: "custom",

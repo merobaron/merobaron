@@ -18,7 +18,17 @@ describe("parseHash", () => {
 
 describe("toHash", () => {
   it("round-trips routes", () => {
-    for (const hash of ["#/", "#/emergencia", "#/selector", "#/detalles", "#/plan", "#/paso/card", "#/denuncia", "#/borrar", "#/completo"]) {
+    for (const hash of [
+      "#/",
+      "#/emergencia",
+      "#/selector",
+      "#/detalles",
+      "#/plan",
+      "#/paso/card",
+      "#/denuncia",
+      "#/borrar",
+      "#/completo",
+    ]) {
       expect(toHash(parseHash(hash))).toBe(hash);
     }
   });

@@ -35,14 +35,22 @@ test.describe("A. main flow", () => {
 
     await expectScreen(page, "#/plan", "TU PLAN");
     const titles = page.locator(".item__title");
-    await expect(titles).toHaveText(["Bloquea tu SIM", "Bloquea tu tarjeta de Bancolombia", "Cambia tus claves", "Pon la denuncia"]);
+    await expect(titles).toHaveText([
+      "Bloquea tu SIM",
+      "Bloquea tu tarjeta de Bancolombia",
+      "Cambia tus claves",
+      "Pon la denuncia",
+    ]);
     await expect(page.locator(".summary__label")).toHaveText("0 de 4 hechas");
     // Only the current step is open, with its official data.
     await expect(page.locator(".item__body")).toHaveCount(1);
     const current = page.locator(".item--current");
     await expect(current.getByRole("heading", { name: "Datos oficiales" })).toBeVisible();
     await expect(current.getByText("311 200 0000")).toBeVisible();
-    await expect(current.getByRole("link", { name: "Llamar a Claro: 311 200 0000" })).toHaveAttribute("href", "tel:3112000000");
+    await expect(current.getByRole("link", { name: "Llamar a Claro: 311 200 0000" })).toHaveAttribute(
+      "href",
+      "tel:3112000000",
+    );
     const screenshot = current.getByRole("img", { name: /Captura de la fuente de Claro/ });
     await expect(screenshot).toHaveCount(0);
     await current.getByRole("button", { name: "Ver captura de la fuente" }).click();

@@ -47,7 +47,9 @@ for (const entry of entries) {
       const quote = page.getByText(entry.cita).filter({ visible: true }).first();
       if ((await quote.count()) === 0) {
         const hidden = await page.getByText(entry.cita).count();
-        warn(`${entry.id}: ${hidden ? "la cita está oculta (¿acordeón cerrado?)" : "la cita no aparece en la fuente. ¿Cambió la página?"}`);
+        warn(
+          `${entry.id}: ${hidden ? "la cita está oculta (¿acordeón cerrado?)" : "la cita no aparece en la fuente. ¿Cambió la página?"}`,
+        );
       } else {
         await quote.scrollIntoViewIfNeeded();
         await quote.evaluate((node) => {

@@ -43,9 +43,10 @@ export interface PlanStep {
 
 const URGENCY_RANK: Record<Urgency, number> = { ahora: 0, hoy: 1, "esta-semana": 2 };
 
-const STEP_ORDER: Record<StepId, number> = Object.fromEntries(
-  STEP_IDS.map((id, index) => [id, index]),
-) as Record<StepId, number>;
+const STEP_ORDER: Record<StepId, number> = Object.fromEntries(STEP_IDS.map((id, index) => [id, index])) as Record<
+  StepId,
+  number
+>;
 
 /** Assets that make the police report required rather than suggested. */
 const REPORT_REQUIRED_FOR: AssetId[] = ["phone", "card"];
@@ -99,7 +100,12 @@ function chosenEntityId(guide: Guide, details: Details, bankId: string | undefin
   return undefined;
 }
 
-function resolveEntity(guide: Guide, details: Details, bankId: string | undefined, entities: Entity[]): Entity | undefined {
+function resolveEntity(
+  guide: Guide,
+  details: Details,
+  bankId: string | undefined,
+  entities: Entity[],
+): Entity | undefined {
   if (!guide.entityKind) return undefined;
   const ofKind = entities.filter((entity) => entity.kind === guide.entityKind);
   if (guide.entityKind === "operador" || guide.entityKind === "banco") {

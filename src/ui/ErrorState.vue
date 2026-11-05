@@ -8,7 +8,10 @@ defineEmits<{ retry: [] }>();
 </script>
 
 <template>
-  <ScreenShell title="ALGO FALLÓ" lead="No pudimos mostrar esta pantalla. Mientras tanto, esto sirve para cualquier robo:">
+  <ScreenShell
+    title="ALGO FALLÓ"
+    lead="No pudimos mostrar esta pantalla. Mientras tanto, esto sirve para cualquier robo:"
+  >
     <ol v-if="guide" class="steps">
       <li v-for="step in guide.steps" :key="step">{{ step }}</li>
     </ol>

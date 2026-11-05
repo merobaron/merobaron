@@ -37,11 +37,11 @@ Lee [CONTRIBUTING.md](CONTRIBUTING.md) y la [política de verificación de datos
 
 ## Licencias
 
-| Qué cubre | Licencia | Archivo |
-|---|---|---|
-| Todo el repositorio, salvo `content/` | [AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html) | [LICENSE](LICENSE) |
-| `content/`, salvo `content/*/evidencia/` y `content/*/logos/` | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | [LICENSE-CONTENT](LICENSE-CONTENT) |
-| `content/*/evidencia/` | Ninguna: son páginas de cada entidad | [content/co/evidencia/README.md](content/co/evidencia/README.md) |
-| `content/*/logos/` | Ninguna: son marcas de cada entidad | [content/co/logos/README.md](content/co/logos/README.md) |
+| Qué cubre                                                     | Licencia                                                        | Archivo                                                          |
+| ------------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Todo el repositorio, salvo `content/`                         | [AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)     | [LICENSE](LICENSE)                                               |
+| `content/`, salvo `content/*/evidencia/` y `content/*/logos/` | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | [LICENSE-CONTENT](LICENSE-CONTENT)                               |
+| `content/*/evidencia/`                                        | Ninguna: son páginas de cada entidad                            | [content/co/evidencia/README.md](content/co/evidencia/README.md) |
+| `content/*/logos/`                                            | Ninguna: son marcas de cada entidad                             | [content/co/logos/README.md](content/co/logos/README.md)         |
 
 Estas licencias no otorgan derechos sobre el nombre ni el logo de MeRobaron. Una copia o versión modificada no debe presentarse como el proyecto oficial.

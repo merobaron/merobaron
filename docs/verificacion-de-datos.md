@@ -14,15 +14,15 @@ La compilación falla si `fuente` o `enlace` apuntan a un dominio que no está e
 
 Cada dato debe incluir:
 
-| Campo        | Descripción                                  |
-| ------------ | -------------------------------------------- |
-| `fuente`     | Página oficial donde aparece el dato         |
-| `verificado` | Fecha en la que una persona comprobó el dato |
-| `vence`      | Fecha límite para volver a comprobarlo       |
+| Campo        | Descripción                                                                                                         |
+| ------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `fuente`     | Página oficial donde aparece el dato                                                                                |
+| `verificado` | Fecha en la que una persona comprobó el dato                                                                        |
+| `vence`      | Fecha límite para volver a comprobarlo                                                                              |
 | `publicado`  | Opcional. Fecha de publicación o actualización que muestra la fuente. Solo si la página la muestra; nunca se estima |
-| `cita`       | Texto tal cual aparece en la fuente. Si hay línea de robo, debe contenerla |
-| `archivo`    | Opcional. Captura de la fuente en [web.archive.org](https://web.archive.org) |
-| `captura`    | Opcional. Screenshot de la fuente con la cita resaltada, relativa a la carpeta del país: `evidencia/<id>.png` |
+| `cita`       | Texto tal cual aparece en la fuente. Si hay línea de robo, debe contenerla                                          |
+| `archivo`    | Opcional. Captura de la fuente en [web.archive.org](https://web.archive.org)                                        |
+| `captura`    | Opcional. Screenshot de la fuente con la cita resaltada, relativa a la carpeta del país: `evidencia/<id>.png`       |
 
 ```yaml
 id: operador-a

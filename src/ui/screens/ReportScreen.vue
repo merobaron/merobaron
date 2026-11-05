@@ -32,7 +32,8 @@ async function copySummary(): Promise<void> {
     copyStatus.value = "Resumen copiado. Pégalo en el portal de denuncias.";
   } catch {
     selectSummary();
-    copyStatus.value = "No pudimos copiar solos. Seleccionamos el texto: cópialo con tu teclado o el menú del navegador.";
+    copyStatus.value =
+      "No pudimos copiar solos. Seleccionamos el texto: cópialo con tu teclado o el menú del navegador.";
   }
 }
 
@@ -99,7 +100,13 @@ function printSummary(): void {
     <fieldset class="filed no-print">
       <legend class="filed__legend">¿Ya la pusiste?</legend>
       <label class="choice">
-        <input type="radio" name="filed" value="yes" :checked="draft.filed === 'yes'" @change="update('filed', 'yes')" />
+        <input
+          type="radio"
+          name="filed"
+          value="yes"
+          :checked="draft.filed === 'yes'"
+          @change="update('filed', 'yes')"
+        />
         <span>Sí, ya la puse</span>
       </label>
       <label class="choice">
@@ -120,7 +127,9 @@ function printSummary(): void {
     </fieldset>
 
     <div class="actions no-print">
-      <UiButton v-if="draft.filed === 'yes'" @click="$emit('finish', true)">Marcar como hecha y volver al plan</UiButton>
+      <UiButton v-if="draft.filed === 'yes'" @click="$emit('finish', true)"
+        >Marcar como hecha y volver al plan</UiButton
+      >
       <UiButton variant="secondary" @click="$emit('back')">Volver al plan</UiButton>
     </div>
   </ScreenShell>

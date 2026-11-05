@@ -25,9 +25,7 @@ export function buildManifest(files, base) {
 /** Fills the manifest and cache version placeholders in the hand-written public/sw.js. */
 export function fillServiceWorker(source, manifest) {
   const version = createHash("sha256").update(JSON.stringify(manifest)).digest("hex").slice(0, 12);
-  return source
-    .replace('"__PRECACHE_MANIFEST__"', JSON.stringify(manifest))
-    .replace("__CACHE_VERSION__", version);
+  return source.replace('"__PRECACHE_MANIFEST__"', JSON.stringify(manifest)).replace("__CACHE_VERSION__", version);
 }
 
 async function listFiles(dir, root = dir) {

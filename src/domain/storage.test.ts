@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { STORAGE_KEY, clearPlan, loadPlan, parseSavedPlan, savePlan, type SavedPlan, type StorageLike } from "./storage";
+import {
+  STORAGE_KEY,
+  clearPlan,
+  loadPlan,
+  parseSavedPlan,
+  savePlan,
+  type SavedPlan,
+  type StorageLike,
+} from "./storage";
 
 function memoryStorage(): StorageLike & { data: Map<string, string> } {
   const data = new Map<string, string>();

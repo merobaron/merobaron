@@ -13,7 +13,14 @@ describe("normalizeBase", () => {
 
 describe("buildManifest", () => {
   it("maps built files under the base and the page to the base itself", () => {
-    const files = ["index.html", "_astro/app.abc.js", "_astro/app.abc.js.map", "_astro/claro.abc.png", "favicon.svg", "sw.js"];
+    const files = [
+      "index.html",
+      "_astro/app.abc.js",
+      "_astro/app.abc.js.map",
+      "_astro/claro.abc.png",
+      "favicon.svg",
+      "sw.js",
+    ];
     expect(buildManifest(files, "/merobaron")).toEqual([
       "/merobaron/",
       "/merobaron/_astro/app.abc.js",

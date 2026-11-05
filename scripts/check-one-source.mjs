@@ -23,7 +23,9 @@ export function changedSources(before, after) {
 export function checkPr(sources, addedDomains) {
   const errors = [];
   if (sources.size > 1) {
-    errors.push(`Este PR cambia datos de ${sources.size} fuentes. Abre un PR por fuente:\n  ${[...sources].join("\n  ")}`);
+    errors.push(
+      `Este PR cambia datos de ${sources.size} fuentes. Abre un PR por fuente:\n  ${[...sources].join("\n  ")}`,
+    );
   }
   const [source] = sources;
   const host = source ? new URL(source).hostname : undefined;

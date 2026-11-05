@@ -1,6 +1,16 @@
 import { isStepKey } from "./plan";
 
-export const SCREENS = ["inicio", "emergencia", "selector", "detalles", "plan", "paso", "denuncia", "borrar", "completo"] as const;
+export const SCREENS = [
+  "inicio",
+  "emergencia",
+  "selector",
+  "detalles",
+  "plan",
+  "paso",
+  "denuncia",
+  "borrar",
+  "completo",
+] as const;
 export type Screen = (typeof SCREENS)[number];
 
 export interface Route {

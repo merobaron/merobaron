@@ -35,7 +35,9 @@ const generalGuide = content.guides.find((guide) => guide.id === "general");
 
 <Base>
   <MeRobaronApp client:load content={content} buildDate={buildDate} />
-  <noscript><StaticFallback guide={generalGuide} /></noscript>
+  <noscript>
+    <StaticFallback guide={generalGuide} />
+  </noscript>
   <StaticFallback guide={generalGuide} id="app-fallback" hidden />
 </Base>
 
@@ -44,7 +46,7 @@ const generalGuide = content.guides.find((guide) => guide.id === "general");
   window.addEventListener("load", function () {
     setTimeout(function () {
       if (document.querySelector("[data-ready]")) return;
-      var fallback = document.getElementById("app-fallback");
+      const fallback = document.getElementById("app-fallback");
       if (fallback) fallback.hidden = false;
     }, 4000);
   });

@@ -16,7 +16,10 @@ watch(choice, (id) => {
 </script>
 
 <template>
-  <ScreenShell title="BLOQUEA TU LÍNEA" lead="Hazlo desde otro teléfono. Así nadie puede usar tu número para recibir códigos o entrar a tus cuentas.">
+  <ScreenShell
+    title="BLOQUEA TU LÍNEA"
+    lead="Hazlo desde otro teléfono. Así nadie puede usar tu número para recibir códigos o entrar a tus cuentas."
+  >
     <fieldset class="group">
       <legend class="group__legend">¿Cuál es tu operador?</legend>
       <label v-for="operator in operators" :key="operator.id" class="choice">

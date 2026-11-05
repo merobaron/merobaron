@@ -134,7 +134,6 @@ describe("guideSchema", () => {
     expect(guideSchema.safeParse({ ...guides[0], fuente: "https://blog.com/robo" }).success).toBe(false);
   });
 
-
   it("rejects a guide without steps", () => {
     const guide = { ...guides[0], pasos: [] };
     expect(guideSchema.safeParse(guide).success).toBe(false);

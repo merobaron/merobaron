@@ -8,7 +8,9 @@ defineEmits<{ delete: [] }>();
 <template>
   <aside class="data no-print" aria-label="Tus datos">
     <p class="data__text">
-      <template v-if="saved">Tu plan se guarda solo en este dispositivo. ¿Teléfono prestado? Bórralo al terminar.</template>
+      <template v-if="saved"
+        >Tu plan se guarda solo en este dispositivo. ¿Teléfono prestado? Bórralo al terminar.</template
+      >
       <template v-else>No pudimos guardar tu plan en este dispositivo. Si cierras la página, se pierde.</template>
     </p>
     <UiButton variant="danger" @click="$emit('delete')">Borrar mis datos</UiButton>

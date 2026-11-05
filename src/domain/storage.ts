@@ -53,14 +53,18 @@ export function parseSavedPlan(value: unknown): SavedPlan | null {
   if (!isRecord(value) || value.version !== 1 || !isRecord(value.selection)) return null;
   // Credit and debit cards used to be separate assets.
   const assets = Array.isArray(value.selection.assets)
-    ? value.selection.assets.map((asset) => (asset === "credit-card" || asset === "debit-card" ? "card" : asset)).filter(isAssetId)
+    ? value.selection.assets
+        .map((asset) => (asset === "credit-card" || asset === "debit-card" ? "card" : asset))
+        .filter(isAssetId)
     : [];
   const unknown = value.selection.unknown === true;
   if (assets.length === 0 && !unknown) return null;
   const details = parseDetails(value.details);
   // Before multiple banks, the card step was always "card"; point it at the saved bank.
   const legacyCard = details.bankIds?.length === 1 ? cardKey(details.bankIds[0]) : "card";
-  const done = Array.isArray(value.done) ? value.done.filter(isStepKey).map((key) => (key === "card" ? legacyCard : key)) : [];
+  const done = Array.isArray(value.done)
+    ? value.done.filter(isStepKey).map((key) => (key === "card" ? legacyCard : key))
+    : [];
   const plan: SavedPlan = {
     version: 1,
     selection: { assets: [...new Set(assets)], unknown },

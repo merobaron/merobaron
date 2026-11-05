@@ -50,7 +50,9 @@ const callHref = computed(() => `tel:${props.step.entity?.theftLine?.replace(/\D
 
     <div class="data__meta">
       <h4 class="data__subtitle">Fuente y verificación</h4>
-      <p v-if="!isExample" class="data__note">Tomados de la fuente oficial. Si algo no coincide, sigue lo que diga la fuente.</p>
+      <p v-if="!isExample" class="data__note">
+        Tomados de la fuente oficial. Si algo no coincide, sigue lo que diga la fuente.
+      </p>
       <dl class="data__list">
         <div>
           <dt>Fuente</dt>

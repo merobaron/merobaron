@@ -33,7 +33,11 @@ function toggleBank(id: string, checked: boolean) {
 </script>
 
 <template>
-  <ScreenShell title="DETALLES" :progress="1" lead="Con esto te mostramos a quién llamar. Si no sabes algo, elige «No lo sé».">
+  <ScreenShell
+    title="DETALLES"
+    :progress="1"
+    lead="Con esto te mostramos a quién llamar. Si no sabes algo, elige «No lo sé»."
+  >
     <form class="details" novalidate @submit.prevent="submit">
       <fieldset v-if="askOperator" class="group">
         <legend class="group__legend">¿Cuál es tu operador de celular?</legend>

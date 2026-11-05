@@ -11,7 +11,9 @@ const props = defineProps<{ steps: PlanStep[]; done: string[]; today: string; ge
 defineEmits<{ open: [key: string]; markDone: [key: string]; changeSelection: []; report: [] }>();
 
 const current = computed(() => currentStep(props.steps, props.done));
-const percent = computed(() => (props.steps.length === 0 ? 0 : (countDone(props.steps, props.done) / props.steps.length) * 100));
+const percent = computed(() =>
+  props.steps.length === 0 ? 0 : (countDone(props.steps, props.done) / props.steps.length) * 100,
+);
 
 function status(step: PlanStep): string {
   if (props.done.includes(step.key)) return "Hecho";
@@ -24,7 +26,11 @@ function status(step: PlanStep): string {
   <ScreenShell
     title="TU PLAN"
     :progress="2"
-    :lead="general ? 'No pasa nada si no lo sabes. Empieza por lo básico.' : 'Hazlo en este orden. Lo más urgente va primero.'"
+    :lead="
+      general
+        ? 'No pasa nada si no lo sabes. Empieza por lo básico.'
+        : 'Hazlo en este orden. Lo más urgente va primero.'
+    "
   >
     <div class="summary">
       <p class="summary__label">{{ progressLabel(steps, done) }}</p>

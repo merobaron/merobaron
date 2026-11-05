@@ -60,15 +60,24 @@ const failed = ref(false);
 const announcement = ref("");
 const root = ref<HTMLElement | null>(null);
 
-const steps = computed(() => (selection.value ? buildPlan(selection.value, details.value, props.content, today.value) : []));
+const steps = computed(() =>
+  selection.value ? buildPlan(selection.value, details.value, props.content, today.value) : [],
+);
 const stepKeys = computed(() => steps.value.map((step) => step.key));
 const activeStep = computed(() => steps.value.find((step) => step.key === route.value.stepKey));
 const emergencyStep = computed(() =>
   details.value.operatorId
-    ? buildPlan({ assets: ["phone"], unknown: false }, { operatorId: details.value.operatorId }, props.content, today.value)[0]
+    ? buildPlan(
+        { assets: ["phone"], unknown: false },
+        { operatorId: details.value.operatorId },
+        props.content,
+        today.value,
+      )[0]
     : undefined,
 );
-const lineBlocked = computed(() => done.value.includes("phone") && (selection.value?.assets.includes("phone") ?? false));
+const lineBlocked = computed(
+  () => done.value.includes("phone") && (selection.value?.assets.includes("phone") ?? false),
+);
 /** Flow E: a plan saved on this device can be continued from the start screen. */
 const savedProgress = computed(() =>
   saved.value && selection.value ? progressLabel(steps.value, done.value) : undefined,
