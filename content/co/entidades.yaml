@@ -12,6 +12,17 @@
   verificado: 2026-11-02
   vence: 2027-02-02
 
+- id: movistar
+  nombre: Tigo (antes Movistar)
+  tipo: operador
+  linea_robo: "01 8000 930 930"
+  fuente: https://www.movistar.com.co/atencion-al-cliente/atencion-en-linea
+  cita: "Atención 01 8000 930 930"
+  archivo: https://web.archive.org/web/20261105014415/https://www.movistar.com.co/atencion-al-cliente/atencion-en-linea
+  captura: evidencia/movistar.png
+  verificado: 2026-11-02
+  vence: 2027-02-02
+
 - id: operador-a
   nombre: Operador A
   tipo: operador
