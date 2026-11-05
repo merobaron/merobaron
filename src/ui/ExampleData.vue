@@ -295,6 +295,7 @@ dd {
 
 .data__url {
   display: block;
+  contain: inline-size;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
