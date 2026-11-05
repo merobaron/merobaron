@@ -18,6 +18,12 @@ Un número falso aceptado aquí puede mandar a una víctima directo a un estafad
 | Contenido general                       | 1                                 | Cumplir la [política de verificación](docs/verificacion-de-datos.md) |
 | Teléfonos, enlaces y dominios oficiales | 2 de mantenedores, sin auto-merge | Cumplir la [política de verificación](docs/verificacion-de-datos.md) |
 
+## Un PR por fuente
+
+Cada PR agrega, corrige o borra datos de **una sola fuente**: una URL en `fuente`. Así cada revisión abre una sola página y la compara con el diff. Varias entradas o guías que citan la misma página pueden ir juntas.
+
+La CI lo comprueba. Un dominio nuevo en `fuentes-oficiales.json` va en el mismo PR que la fuente que lo usa.
+
 ## Datos personales
 
 No incluyas datos personales en issues, PR ni capturas de pantalla, ni tuyos ni de otras personas. Esto incluye cédulas, números de cuenta, IMEI y denuncias.

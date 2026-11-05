@@ -34,6 +34,8 @@ Este ejemplo es ficticio.
 
 ## Revisión
 
+Un PR por fuente: cada PR cambia datos de una sola URL de `fuente`. La CI lo comprueba.
+
 Dos personas mantenedoras abren la fuente y comprueban que el dato aparece ahí, tal cual. No basta con revisar el diff.
 
 ## Fuentes antiguas
