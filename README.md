@@ -25,10 +25,12 @@ tokens/       Tokens de diseño en JSON
 ## Desarrollo
 
 ```sh
+nix develop
 pnpm install
 pnpm dev
 pnpm test
 pnpm build
+nix build
 ```
 
 ## Contribuir
