@@ -3,3 +3,5 @@ minimumReleaseAge: 10080
 strictDepBuilds: true
 trustPolicy: no-downgrade
 blockExoticSubdeps: true
+overrides:
+  semver@6: 7.8.5
