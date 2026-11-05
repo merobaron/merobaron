@@ -6,9 +6,9 @@ import Base from "../layouts/Base.astro";
 import MeRobaronApp from "../ui/MeRobaronApp.vue";
 import StaticFallback from "../ui/StaticFallback.astro";
 
-const screenshots = import.meta.glob<string>("../../content/co/evidencia/*.png", {
+// Imported as Astro images: `?url` paths only load inside <img> on the dev server, not when opened as a page.
+const screenshots = import.meta.glob<ImageMetadata>("../../content/co/evidencia/*.png", {
   eager: true,
-  query: "?url",
   import: "default",
 });
 
@@ -23,7 +23,7 @@ const content: Content = {
     const entity = toEntity(entry.data);
     return {
       ...entity,
-      evidence: entity.evidence && screenshots[`../../${entity.evidence}`],
+      evidence: entity.evidence && screenshots[`../../${entity.evidence}`]?.src,
       logo: logos[`../../content/co/logos/${entity.id}.png`],
     };
   }),
