@@ -5,7 +5,7 @@ describe("buildReportSummary", () => {
   it("lists what happened and what was taken", () => {
     const summary = buildReportSummary(
       { ...emptyReport(), when: "Hoy, 7 p. m.", where: "Parque central", what: "Me quitaron el bolso." },
-      ["phone", "debit-card"],
+      ["phone", "card"],
     );
     expect(summary).toBe(
       [
@@ -17,7 +17,7 @@ describe("buildReportSummary", () => {
         "",
         "Qué me robaron:",
         "- Celular",
-        "- Tarjeta débito",
+        "- Tarjeta de crédito o débito",
       ].join("\n"),
     );
   });

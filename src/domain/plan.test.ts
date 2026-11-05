@@ -10,20 +10,15 @@ function plan(assets: AssetId[], details: Details = {}, unknown = false) {
 
 describe("buildPlan", () => {
   it("orders steps by urgency with the phone first", () => {
-    const ids = plan(["documents", "id-card", "email", "credit-card", "phone"]).map((step) => step.id);
+    const ids = plan(["documents", "id-card", "email", "card", "phone"]).map((step) => step.id);
     expect(ids).toEqual(["phone", "card", "passwords", "report", "id-card", "documents"]);
   });
 
   it("keeps the phone first even if its guide is less urgent", () => {
     const content = exampleContent();
     content.guides = content.guides.map((guide) => (guide.id === "phone" ? { ...guide, urgency: "hoy" } : guide));
-    const ids = buildPlan({ assets: ["credit-card", "phone"], unknown: false }, {}, content, TODAY).map((s) => s.id);
+    const ids = buildPlan({ assets: ["card", "phone"], unknown: false }, {}, content, TODAY).map((s) => s.id);
     expect(ids[0]).toBe("phone");
-  });
-
-  it("merges credit and debit cards into one card step", () => {
-    const ids = plan(["credit-card", "debit-card"]).map((step) => step.id);
-    expect(ids).toEqual(["card", "report"]);
   });
 
   it("adds a passwords step when the phone was taken", () => {
@@ -45,7 +40,7 @@ describe("buildPlan", () => {
 
   it("requires the report when the phone or a card was taken", () => {
     expect(plan(["phone", "id-card"]).find((step) => step.id === "report")?.optional).toBe(false);
-    expect(plan(["debit-card"]).find((step) => step.id === "report")?.optional).toBe(false);
+    expect(plan(["card"]).find((step) => step.id === "report")?.optional).toBe(false);
   });
 
   it("uses the chosen operator", () => {
@@ -72,7 +67,7 @@ describe("buildPlan", () => {
   it("adds one card step per chosen bank, in the order chosen", () => {
     const content = exampleContent();
     content.entities.push({ ...content.entities.find((entity) => entity.id === "banco-a")!, id: "banco-b", name: "banco-b" });
-    const cards = buildPlan({ assets: ["debit-card"], unknown: false }, { bankIds: ["banco-b", "banco-a"] }, content, TODAY).filter(
+    const cards = buildPlan({ assets: ["card"], unknown: false }, { bankIds: ["banco-b", "banco-a"] }, content, TODAY).filter(
       (step) => step.id === "card",
     );
     expect(cards.map((step) => step.key)).toEqual(["card:banco-b", "card:banco-a"]);
@@ -80,7 +75,7 @@ describe("buildPlan", () => {
   });
 
   it("keeps a single card step when the bank is unknown", () => {
-    const cards = plan(["debit-card"], { bankIds: ["unknown"] }).filter((step) => step.id === "card");
+    const cards = plan(["card"], { bankIds: ["unknown"] }).filter((step) => step.id === "card");
     expect(cards.map((step) => [step.key, step.title])).toEqual([["card", "card"]]);
     expect(cards[0].instructions[0]).toBe("Busca tu banco.");
   });
@@ -116,7 +111,7 @@ describe("buildPlan", () => {
 describe("needsDetails", () => {
   it("asks for details only for the phone and cards", () => {
     expect(needsDetails({ assets: ["phone"], unknown: false })).toBe(true);
-    expect(needsDetails({ assets: ["debit-card"], unknown: false })).toBe(true);
+    expect(needsDetails({ assets: ["card"], unknown: false })).toBe(true);
     expect(needsDetails({ assets: ["email", "id-card"], unknown: false })).toBe(false);
     expect(needsDetails({ assets: [], unknown: true })).toBe(false);
   });

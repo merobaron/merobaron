@@ -1,6 +1,6 @@
 import { isExpired, type Content, type Entity, type Guide, type Urgency } from "./content";
 
-export const ASSET_IDS = ["phone", "credit-card", "debit-card", "id-card", "email", "documents"] as const;
+export const ASSET_IDS = ["phone", "card", "id-card", "email", "documents"] as const;
 export type AssetId = (typeof ASSET_IDS)[number];
 
 export const STEP_IDS = ["phone", "card", "passwords", "report", "id-card", "documents", "general"] as const;
@@ -48,7 +48,7 @@ const STEP_ORDER: Record<StepId, number> = Object.fromEntries(
 ) as Record<StepId, number>;
 
 /** Assets that make the police report required rather than suggested. */
-const REPORT_REQUIRED_FOR: AssetId[] = ["phone", "credit-card", "debit-card"];
+const REPORT_REQUIRED_FOR: AssetId[] = ["phone", "card"];
 
 export function isAssetId(value: unknown): value is AssetId {
   return typeof value === "string" && (ASSET_IDS as readonly string[]).includes(value);
@@ -71,7 +71,7 @@ export function needsOperator(selection: Selection): boolean {
 }
 
 export function needsBank(selection: Selection): boolean {
-  return !selection.unknown && selection.assets.some((asset) => asset === "credit-card" || asset === "debit-card");
+  return !selection.unknown && selection.assets.includes("card");
 }
 
 /** Whether the details screen has anything to ask for this selection. */
@@ -85,7 +85,7 @@ export function stepIdsFor(selection: Selection): StepId[] {
 
   const ids: StepId[] = [];
   if (assets.includes("phone")) ids.push("phone");
-  if (assets.includes("credit-card") || assets.includes("debit-card")) ids.push("card");
+  if (assets.includes("card")) ids.push("card");
   if (assets.includes("phone") || assets.includes("email")) ids.push("passwords");
   ids.push("report");
   if (assets.includes("id-card")) ids.push("id-card");

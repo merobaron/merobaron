@@ -92,6 +92,11 @@ describe("parseSavedPlan", () => {
     });
   });
 
+  it("merges the old credit and debit card assets into one", () => {
+    const parsed = parseSavedPlan({ ...plan, selection: { assets: ["credit-card", "debit-card"], unknown: false } });
+    expect(parsed?.selection.assets).toEqual(["card"]);
+  });
+
   it("reads plans saved with a single bank", () => {
     const parsed = parseSavedPlan({ ...plan, details: { bankId: "banco-a" }, done: ["card", "report"] });
     expect(parsed?.details).toEqual({ bankIds: ["banco-a"] });

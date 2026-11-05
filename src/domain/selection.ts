@@ -19,8 +19,7 @@ export const URGENCY_LABELS = {
 
 export const ASSET_LABELS: Record<AssetId, string> = {
   phone: "Celular",
-  "credit-card": "Tarjeta de crédito",
-  "debit-card": "Tarjeta débito",
+  card: "Tarjeta de crédito o débito",
   "id-card": "Cédula",
   email: "Correo y redes",
   documents: "Otros documentos",

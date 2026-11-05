@@ -25,7 +25,7 @@ test.describe("A. main flow", () => {
     await page.getByRole("button", { name: "Continuar" }).click();
     await expect(page.getByRole("alert")).toHaveText("Selecciona al menos una opción.");
 
-    await choose(page, /CELULAR/, /TARJETA DE CRÉDITO/);
+    await choose(page, /CELULAR/, /TARJETA DE CRÉDITO O DÉBITO/);
     await expectScreen(page, "#/detalles", "DETALLES");
     await page.getByLabel("Claro", { exact: true }).check();
     await page.getByLabel("Bancolombia", { exact: true }).check();

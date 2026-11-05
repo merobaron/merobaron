@@ -51,7 +51,10 @@ function parseDetails(value: unknown): Details {
 /** Validates data read from storage. Anything unexpected is dropped instead of trusted. */
 export function parseSavedPlan(value: unknown): SavedPlan | null {
   if (!isRecord(value) || value.version !== 1 || !isRecord(value.selection)) return null;
-  const assets = Array.isArray(value.selection.assets) ? value.selection.assets.filter(isAssetId) : [];
+  // Credit and debit cards used to be separate assets.
+  const assets = Array.isArray(value.selection.assets)
+    ? value.selection.assets.map((asset) => (asset === "credit-card" || asset === "debit-card" ? "card" : asset)).filter(isAssetId)
+    : [];
   const unknown = value.selection.unknown === true;
   if (assets.length === 0 && !unknown) return null;
   const details = parseDetails(value.details);
