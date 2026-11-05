@@ -21,6 +21,14 @@ const officialUrl = httpsUrl.refine(isOfficial, {
   error: "Usa un enlace de un dominio oficial listado en content/co/fuentes-oficiales.json.",
 });
 
+const digits = (value: string): string => value.replace(/\D/g, "");
+
+export function isArchiveOf(archive: string, source: string): boolean {
+  const match = /^https:\/\/web\.archive\.org\/web\/\d{14}\/(.+)$/.exec(archive);
+  const bare = (url: string) => url.replace(/^https?:\/\//, "");
+  return match !== null && bare(match[1]) === bare(source);
+}
+
 const entityKind = z.enum(["operador", "banco", "autoridad", "identificacion"]);
 
 const verification = {
@@ -57,9 +65,27 @@ export const entitySchema = z
     tipo: entityKind,
     linea_robo: z.string().min(1).optional(),
     enlace: officialUrl.optional(),
+    cita: z.string().min(1).optional(),
+    archivo: httpsUrl.optional(),
+    captura: z
+      .string()
+      .regex(/^evidencia\/[a-z0-9-]+\.png$/, "Usa una ruta como evidencia/<id>.png.")
+      .optional(),
     ...verification,
   })
-  .superRefine(checkDates);
+  .superRefine(checkDates)
+  .superRefine((data, ctx) => {
+    if (data.cita && data.linea_robo && !digits(data.cita).includes(digits(data.linea_robo))) {
+      ctx.addIssue({ code: "custom", path: ["cita"], message: "La cita debe contener la línea de robo." });
+    }
+    if (data.archivo && !isArchiveOf(data.archivo, data.fuente)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["archivo"],
+        message: "Usa una captura de web.archive.org de la misma fuente.",
+      });
+    }
+  });
 
 export const guideSchema = z
   .object({
@@ -86,6 +112,9 @@ export function toEntity(data: EntityData): Entity {
     kind: data.tipo,
     theftLine: data.linea_robo,
     link: data.enlace,
+    quote: data.cita,
+    archive: data.archivo,
+    evidence: data.captura && `content/co/${data.captura}`,
     source: data.fuente,
     verifiedOn: data.verificado,
     expiresOn: data.vence,

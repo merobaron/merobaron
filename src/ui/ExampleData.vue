@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, useId } from "vue";
-import { isExpired } from "../domain/content";
+import { isExpired, quoteUrl } from "../domain/content";
 import type { PlanStep } from "../domain/plan";
 
 const props = defineProps<{ step: PlanStep; today: string }>();
@@ -40,7 +40,17 @@ const isExample = computed(() => new URL(props.step.entity?.source ?? props.step
       </div>
       <div>
         <dt>Fuente</dt>
-        <dd class="example__mono">{{ step.entity?.source ?? step.source }}</dd>
+        <dd class="example__mono">
+          <a :href="quoteUrl(step.entity?.source ?? step.source, step.entity?.quote)" rel="noreferrer">{{
+            step.entity?.source ?? step.source
+          }}</a>
+        </dd>
+      </div>
+      <div v-if="step.entity?.archive">
+        <dt>Copia archivada</dt>
+        <dd class="example__mono">
+          <a :href="step.entity.archive" rel="noreferrer">Wayback Machine</a>
+        </dd>
       </div>
       <div>
         <dt>Verificado</dt>
@@ -51,6 +61,18 @@ const isExample = computed(() => new URL(props.step.entity?.source ?? props.step
         <dd>{{ step.entity?.expiresOn ?? step.expiresOn }}</dd>
       </div>
     </dl>
+    <figure v-if="step.entity?.evidence" class="example__evidence">
+      <a :href="step.entity.evidence">
+        <img
+          :src="step.entity.evidence"
+          :alt="`Captura de la fuente de ${step.entity.name} con el dato resaltado`"
+          width="1280"
+          height="900"
+          loading="lazy"
+        />
+      </a>
+      <figcaption>Captura de la fuente, con el dato resaltado. Ábrela para verla completa.</figcaption>
+    </figure>
   </section>
 </template>
 
@@ -110,6 +132,24 @@ dd {
 
 .example__mono {
   font-family: ui-monospace, monospace;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.example__evidence {
+  margin: 0;
+}
+
+.example__evidence img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--border-thin) solid var(--color-ink-soft);
+}
+
+.example__evidence figcaption {
+  margin-top: var(--space-xs);
+  color: var(--color-ink-soft);
   font-size: 14px;
 }
 

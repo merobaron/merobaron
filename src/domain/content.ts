@@ -17,6 +17,9 @@ export interface Entity extends Verifiable {
   kind: EntityKind;
   theftLine?: string;
   link?: string;
+  quote?: string;
+  archive?: string;
+  evidence?: string;
 }
 
 export interface Guide extends Verifiable {
@@ -48,4 +51,11 @@ export function todayIso(now: Date = new Date()): string {
 /** Data whose `vence` date has passed must never be shown as current. */
 export function isExpired(record: Pick<Verifiable, "expiresOn">, today: string): boolean {
   return record.expiresOn < today;
+}
+
+export function quoteUrl(source: string, quote?: string): string {
+  if (!quote) return source;
+  // "-", "," and "&" delimit text fragments, so they must be escaped too.
+  const text = encodeURIComponent(quote).replace(/-/g, "%2D");
+  return `${source.split("#")[0]}#:~:text=${text}`;
 }

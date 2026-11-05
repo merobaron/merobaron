@@ -12,12 +12,12 @@ export function normalizeBase(base) {
 
 /**
  * URLs the service worker precaches: the page itself plus every built file,
- * except the service worker and source maps.
+ * except the service worker, source maps and evidence screenshots (heavy, rarely opened offline).
  */
 export function buildManifest(files, base) {
   const root = normalizeBase(base);
   const urls = files
-    .filter((file) => file !== SERVICE_WORKER && !file.endsWith(".map"))
+    .filter((file) => file !== SERVICE_WORKER && !file.endsWith(".map") && !file.endsWith(".png"))
     .map((file) => (file === "index.html" ? root : `${root}${file}`));
   return [...new Set(urls)].sort();
 }

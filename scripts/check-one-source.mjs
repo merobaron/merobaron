@@ -3,18 +3,21 @@ import { existsSync, readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { parse } from "yaml";
 
-export function changedSources(before, after) {
+export function changedEntries(before, after) {
   const byId = (entries) => new Map(entries.map((entry) => [entry.id, entry]));
   const old = byId(before);
   const now = byId(after);
-  const sources = new Set();
+  const changed = [];
   for (const id of new Set([...old.keys(), ...now.keys()])) {
     const a = old.get(id);
     const b = now.get(id);
-    if (JSON.stringify(a) === JSON.stringify(b)) continue;
-    sources.add((b ?? a).fuente);
+    if (JSON.stringify(a) !== JSON.stringify(b)) changed.push(b ?? a);
   }
-  return sources;
+  return changed;
+}
+
+export function changedSources(before, after) {
+  return new Set(changedEntries(before, after).map((entry) => entry.fuente));
 }
 
 export function checkPr(sources, addedDomains) {
@@ -44,9 +47,9 @@ function atBase(base, path) {
   }
 }
 
-function main(base) {
+export function readChanges(base) {
   const changed = git("diff", "--name-only", base, "--", "content").split("\n").filter(Boolean);
-  const sources = new Set();
+  const entries = [];
   const addedDomains = [];
   for (const path of changed) {
     const before = atBase(base, path);
@@ -55,11 +58,15 @@ function main(base) {
       const old = new Set(before ? JSON.parse(before).dominios : []);
       addedDomains.push(...(after ? JSON.parse(after).dominios : []).filter((domain) => !old.has(domain)));
     } else if (path.endsWith(".yaml")) {
-      for (const source of changedSources(parse(before ?? "[]") ?? [], parse(after ?? "[]") ?? [])) {
-        sources.add(source);
-      }
+      entries.push(...changedEntries(parse(before ?? "[]") ?? [], parse(after ?? "[]") ?? []));
     }
   }
+  return { entries, addedDomains };
+}
+
+function main(base) {
+  const { entries, addedDomains } = readChanges(base);
+  const sources = new Set(entries.map((entry) => entry.fuente));
   const errors = checkPr(sources, addedDomains);
   for (const error of errors) console.error(error);
   if (errors.length > 0) process.exit(1);

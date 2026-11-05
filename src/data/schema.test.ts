@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { parseDocument } from "yaml";
 import entitiesSource from "../../content/co/entidades.yaml?raw";
 import guidesSource from "../../content/co/guias.yaml?raw";
-import { entitySchema, guideSchema, isOfficial, toEntity, toGuide } from "./schema";
+import { entitySchema, guideSchema, isArchiveOf, isOfficial, toEntity, toGuide } from "./schema";
 
 // Same parser options Astro's file() loader uses, so dates arrive as Date objects.
 function parseYaml(source: string): Record<string, unknown>[] {
@@ -10,6 +10,7 @@ function parseYaml(source: string): Record<string, unknown>[] {
 }
 
 const entities = parseYaml(entitiesSource);
+const screenshots = Object.keys(import.meta.glob("../../content/co/evidencia/*.png"));
 const guides = parseYaml(guidesSource);
 
 const validEntity = {
@@ -29,6 +30,12 @@ describe("content files", () => {
 
   it.each(guides.map((entry) => [entry.id, entry]))("guide %s matches the schema", (_, entry) => {
     expect(guideSchema.safeParse(entry).success).toBe(true);
+  });
+
+  it("only links screenshots that exist in the repository", () => {
+    for (const entry of entities) {
+      if (entry.captura !== undefined) expect(screenshots).toContain(`../../content/co/${entry.captura}`);
+    }
   });
 
   it("has a guide for every plan step", () => {
@@ -69,6 +76,22 @@ describe("entitySchema", () => {
     expect(entitySchema.safeParse({ ...validEntity, publicado: new Date("2026-11-02") }).success).toBe(false);
   });
 
+  it("accepts a quote that contains the theft line, whatever its spacing", () => {
+    const entry = { ...validEntity, cita: "Llama a la línea (+57) 000 0000000 opción 3" };
+    expect(entitySchema.safeParse(entry).success).toBe(true);
+  });
+
+  it("rejects a quote without the theft line", () => {
+    expect(entitySchema.safeParse({ ...validEntity, cita: "Llama a la línea 000 000 0001" }).success).toBe(false);
+  });
+
+  it("accepts a Wayback Machine capture of the same source only", () => {
+    const capture = "https://web.archive.org/web/20261104120000/https://ejemplo.com/soporte";
+    expect(entitySchema.safeParse({ ...validEntity, archivo: capture }).success).toBe(true);
+    const other = "https://web.archive.org/web/20261104120000/https://ejemplo.com/otra";
+    expect(entitySchema.safeParse({ ...validEntity, archivo: other }).success).toBe(false);
+  });
+
   it("accepts quoted ISO dates", () => {
     const entry = { ...validEntity, verificado: "2026-11-01", vence: "2027-02-01" };
     expect(entitySchema.safeParse(entry).success).toBe(true);
@@ -85,6 +108,15 @@ describe("entitySchema", () => {
       verifiedOn: "2026-11-01",
       expiresOn: "2027-02-01",
     });
+  });
+});
+
+describe("isArchiveOf", () => {
+  it("matches the capture regardless of http or https in the archived URL", () => {
+    const source = "https://www.claro.com.co/robo/";
+    expect(isArchiveOf("https://web.archive.org/web/20261104120000/http://www.claro.com.co/robo/", source)).toBe(true);
+    expect(isArchiveOf("https://web.archive.org/web/2026/https://www.claro.com.co/robo/", source)).toBe(false);
+    expect(isArchiveOf("https://archive.ph/web/20261104120000/https://www.claro.com.co/robo/", source)).toBe(false);
   });
 });
 

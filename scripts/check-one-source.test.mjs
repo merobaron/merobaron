@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { changedSources, checkPr } from "./check-one-source.mjs";
+import { changedEntries, changedSources, checkPr } from "./check-one-source.mjs";
 
 const a = { id: "claro", fuente: "https://www.claro.com.co/robo", linea_robo: "1" };
 const b = { id: "tigo", fuente: "https://ayuda.tigo.com.co/robo", linea_robo: "2" };
@@ -17,6 +17,13 @@ describe("changedSources", () => {
 
   it("counts only the new source when an entry switches source", () => {
     expect(changedSources([a], [{ ...a, fuente: b.fuente }])).toEqual(new Set([b.fuente]));
+  });
+});
+
+describe("changedEntries", () => {
+  it("returns changed entries as they are now, and removed ones as they were", () => {
+    const edited = { ...a, linea_robo: "3" };
+    expect(changedEntries([a, b], [edited])).toEqual([edited, b]);
   });
 });
 

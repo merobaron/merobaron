@@ -6,8 +6,17 @@ import Base from "../layouts/Base.astro";
 import MeRobaronApp from "../ui/MeRobaronApp.vue";
 import StaticFallback from "../ui/StaticFallback.astro";
 
+const screenshots = import.meta.glob<string>("../../content/co/evidencia/*.png", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
 const content: Content = {
-  entities: (await getCollection("entidades")).map((entry) => toEntity(entry.data)),
+  entities: (await getCollection("entidades")).map((entry) => {
+    const entity = toEntity(entry.data);
+    return { ...entity, evidence: entity.evidence && screenshots[`../../${entity.evidence}`] };
+  }),
   guides: (await getCollection("guias")).map((entry) => toGuide(entry.data)),
 };
 const buildDate = todayIso();
