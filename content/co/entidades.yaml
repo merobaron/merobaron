@@ -23,6 +23,16 @@
   verificado: 2026-11-02
   vence: 2027-02-02
 
+- id: tigo
+  nombre: Tigo
+  tipo: operador
+  linea_robo: "01 8000 422 222"
+  fuente: https://ayuda.tigo.com.co/hc/centro-de-ayuda/articles/1728716437-como-bloquear-tu-celular-y-linea-tigo-por-robo-o-perdida-movil
+  cita: "018000422222 desde líneas fijas."
+  archivo: https://web.archive.org/web/20261105014505/https://ayuda.tigo.com.co/hc/centro-de-ayuda/articles/1728716437-como-bloquear-tu-celular-y-linea-tigo-por-robo-o-perdida-movil
+  verificado: 2026-11-02
+  vence: 2027-02-02
+
 - id: operador-a
   nombre: Operador A
   tipo: operador
