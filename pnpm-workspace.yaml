@@ -1,2 +1,5 @@
 savePrefix: ""
 minimumReleaseAge: 10080
+strictDepBuilds: true
+trustPolicy: no-downgrade
+blockExoticSubdeps: true
