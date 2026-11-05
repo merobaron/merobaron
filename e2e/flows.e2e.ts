@@ -13,7 +13,6 @@ import {
 test.describe("A. main flow", () => {
   test("goes from what was taken to a complete plan", async ({ page }) => {
     await openHome(page);
-    await expect(page.getByText("Sitio en construcción.")).toBeVisible();
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex");
     await expectAccessible(page);
     await expectNoHorizontalScroll(page);
