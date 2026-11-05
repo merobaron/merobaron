@@ -152,8 +152,10 @@ const callHref = computed(() => `tel:${props.step.entity?.theftLine?.replace(/\D
 }
 
 .data__logo {
+  box-sizing: border-box;
   width: 28px;
   height: 28px;
+  border: 1px solid var(--color-ink);
   object-fit: contain;
 }
 

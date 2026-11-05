@@ -32,6 +32,7 @@ function submit() {
         <legend class="group__legend">¿Cuál es tu operador de celular?</legend>
         <label v-for="operator in operators" :key="operator.id" class="choice">
           <input v-model="form.operatorId" type="radio" name="operator" :value="operator.id" />
+          <img v-if="operator.logo" class="choice__logo" :src="operator.logo" alt="" width="28" height="28" />
           <span>{{ operator.name }}</span>
           <span v-if="isExpired(operator, today)" class="choice__flag">dato vencido</span>
         </label>
@@ -45,6 +46,7 @@ function submit() {
         <legend class="group__legend">¿De qué banco es tu tarjeta?</legend>
         <label v-for="bank in banks" :key="bank.id" class="choice">
           <input v-model="form.bankId" type="radio" name="bank" :value="bank.id" />
+          <img v-if="bank.logo" class="choice__logo" :src="bank.logo" alt="" width="28" height="28" />
           <span>{{ bank.name }}</span>
           <span v-if="isExpired(bank, today)" class="choice__flag">dato vencido</span>
         </label>
@@ -112,6 +114,14 @@ function submit() {
   height: 20px;
   margin: 0;
   accent-color: var(--color-ink);
+}
+
+.choice__logo {
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-ink);
+  object-fit: contain;
 }
 
 .choice__flag {
