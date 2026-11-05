@@ -90,43 +90,6 @@
   verificado: 2026-11-02
   vence: 2027-02-02
 
-- id: operador-a
-  nombre: Operador A
-  tipo: operador
-  linea_robo: "000 000 0000"
-  enlace: https://ejemplo.com/operador-a
-  fuente: https://ejemplo.com/operador-a/soporte
-  verificado: 2026-11-01
-  vence: 2027-02-01
-
-- id: operador-b
-  nombre: Operador B
-  tipo: operador
-  linea_robo: "000 000 0001"
-  enlace: https://ejemplo.com/operador-b
-  fuente: https://ejemplo.com/operador-b/soporte
-  verificado: 2026-11-01
-  vence: 2027-02-01
-
-# Vencido a propósito: el sitio debe advertirlo y no mostrarlo como vigente.
-- id: operador-c
-  nombre: Operador C
-  tipo: operador
-  linea_robo: "000 000 0002"
-  enlace: https://ejemplo.com/operador-c
-  fuente: https://ejemplo.com/operador-c/soporte
-  verificado: 2026-05-01
-  vence: 2026-08-01
-
-- id: banco-a
-  nombre: Banco A
-  tipo: banco
-  linea_robo: "000 000 0003"
-  enlace: https://ejemplo.com/banco-a
-  fuente: https://ejemplo.com/banco-a/seguridad
-  verificado: 2026-11-01
-  vence: 2027-02-01
-
 - id: portal-denuncias
   nombre: Portal de denuncias
   tipo: autoridad

@@ -28,9 +28,9 @@ test.describe("A. main flow", () => {
 
     await choose(page, /CELULAR/, /TARJETA DE CRÉDITO/);
     await expectScreen(page, "#/detalles", "DETALLES");
-    await page.getByLabel("Operador A").check();
+    await page.getByLabel("Claro", { exact: true }).check();
     await page.getByLabel("Sí, lo tengo").check();
-    await page.getByLabel("Banco A").check();
+    await page.getByLabel("Bancolombia", { exact: true }).check();
     await expectAccessible(page);
     await expectNoHorizontalScroll(page);
     await page.getByRole("button", { name: "Ver mi plan" }).click();
@@ -39,11 +39,12 @@ test.describe("A. main flow", () => {
     const titles = page.locator(".item__title");
     await expect(titles).toHaveText(["Bloquea tu SIM", "Bloquea tu tarjeta", "Cambia tus claves", "Pon la denuncia"]);
     await expect(page.locator(".summary__label")).toHaveText("0 de 4 hechas");
-    // Only the current step is open, with its example data.
+    // Only the current step is open, with its official data.
     await expect(page.locator(".item__body")).toHaveCount(1);
     const current = page.locator(".item--current");
-    await expect(current.getByRole("heading", { name: "Datos de ejemplo" })).toBeVisible();
-    await expect(current.getByText("000 000 0000")).toBeVisible();
+    await expect(current.getByRole("heading", { name: "Datos oficiales" })).toBeVisible();
+    await expect(current.getByText("311 200 0000")).toBeVisible();
+    await expect(current.getByRole("img", { name: /Captura de la fuente de Claro/ })).toBeVisible();
     await expectAccessible(page);
     await expectNoHorizontalScroll(page);
 
@@ -72,10 +73,12 @@ test.describe("A. main flow", () => {
   });
 
   test("warns about expired data instead of showing it as current", async ({ page }) => {
+    // Every entry has expired by then; real data is never expired on purpose.
+    await page.clock.setFixedTime(new Date("2027-03-01T12:00:00"));
     await openHome(page);
     await page.getByRole("button", { name: "Empezar" }).click();
     await choose(page, /CELULAR/);
-    await page.getByLabel(/Operador C/).check();
+    await page.getByLabel(/^Claro/).check();
     await page.getByLabel("No lo tengo").check();
     await page.getByRole("button", { name: "Ver mi plan" }).click();
     const current = page.locator(".item--current");
@@ -89,9 +92,9 @@ test("B. stolen phone shortcut continues into the main flow", async ({ page }) =
   await openHome(page);
   await page.getByRole("button", { name: "Bloquear mi línea" }).click();
   await expectScreen(page, "#/emergencia", "BLOQUEA TU LÍNEA");
-  await page.getByLabel("Operador B").check();
-  await expect(page.getByRole("heading", { name: "Llama a Operador B" })).toBeVisible();
-  await expect(page.getByText("000 000 0001")).toBeVisible();
+  await page.getByLabel("Tigo", { exact: true }).check();
+  await expect(page.getByRole("heading", { name: "Llama a Tigo" })).toBeVisible();
+  await expect(page.getByText("01 8000 422 222")).toBeVisible();
   await expectAccessible(page);
   await expectNoHorizontalScroll(page);
 
@@ -101,7 +104,7 @@ test("B. stolen phone shortcut continues into the main flow", async ({ page }) =
   await expect(page.getByRole("checkbox", { name: "CELULAR" })).toBeChecked();
 
   await choose(page, /CORREO Y REDES/);
-  await expect(page.getByLabel("Operador B")).toBeChecked();
+  await expect(page.getByLabel("Tigo", { exact: true })).toBeChecked();
   await page.getByRole("button", { name: "Ver mi plan" }).click();
   await expect(page.locator(".summary__label")).toHaveText("1 de 3 hechas");
   await expect(page.locator(".item--current .item__title")).toHaveText("Cambia tus claves");

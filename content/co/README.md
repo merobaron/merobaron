@@ -11,6 +11,6 @@ Entidades, líneas y guías en YAML. Cada dato cumple la [política de verificac
 
 Toda entrada lleva `fuente`, `verificado` y `vence`, y `publicado` si la fuente muestra su fecha. Las entidades llevan `cita` con el texto tal cual de la fuente y, si existen, `archivo` con su captura en web.archive.org y `captura` con su screenshot en `evidencia/`. `fuente` y `enlace` deben estar en un dominio de `fuentes-oficiales.json`. La compilación falla si no se cumple. Un dato vencido se muestra con una advertencia, nunca como vigente.
 
-Por ahora todos los datos son de ejemplo (Operador A, Banco A, `000 000 0000`). Los datos reales se agregan solo cuando dos personas mantenedoras los verifican.
+Las guías y las entidades de denuncia y documento todavía son de ejemplo: su fuente está en `ejemplo.com` y el sitio las marca así. `ejemplo.com` sale de `fuentes-oficiales.json` cuando se reemplace el último dato de ejemplo. Los datos reales se agregan solo cuando dos personas mantenedoras los verifican.
 
 Esta carpeta se publica bajo CC BY-SA 4.0.
