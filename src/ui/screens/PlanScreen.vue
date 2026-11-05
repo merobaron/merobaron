@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { PlanStep, StepId } from "../../domain/plan";
+import type { PlanStep } from "../../domain/plan";
 import { countDone, currentStep, progressLabel } from "../../domain/progress";
 import { URGENCY_LABELS } from "../../domain/selection";
 import ScreenShell from "../ScreenShell.vue";
 import StepDetail from "../StepDetail.vue";
 import UiButton from "../UiButton.vue";
 
-const props = defineProps<{ steps: PlanStep[]; done: StepId[]; today: string; general: boolean }>();
-defineEmits<{ open: [id: StepId]; markDone: [id: StepId]; changeSelection: []; report: [] }>();
+const props = defineProps<{ steps: PlanStep[]; done: string[]; today: string; general: boolean }>();
+defineEmits<{ open: [key: string]; markDone: [key: string]; changeSelection: []; report: [] }>();
 
 const current = computed(() => currentStep(props.steps, props.done));
 const percent = computed(() => (props.steps.length === 0 ? 0 : (countDone(props.steps, props.done) / props.steps.length) * 100));
 
 function status(step: PlanStep): string {
-  if (props.done.includes(step.id)) return "Hecho";
+  if (props.done.includes(step.key)) return "Hecho";
   if (step.optional) return "Recomendado";
   return "Pendiente";
 }
@@ -34,9 +34,9 @@ function status(step: PlanStep): string {
     <ol class="plan">
       <li
         v-for="(step, index) in steps"
-        :key="step.id"
+        :key="step.key"
         class="item"
-        :class="{ 'item--current': current?.id === step.id, 'item--done': done.includes(step.id) }"
+        :class="{ 'item--current': current?.key === step.key, 'item--done': done.includes(step.key) }"
       >
         <div class="item__head">
           <span class="item__number" aria-hidden="true">{{ index + 1 }}</span>
@@ -50,16 +50,16 @@ function status(step: PlanStep): string {
           </div>
         </div>
 
-        <div v-if="current?.id === step.id" class="item__body">
+        <div v-if="current?.key === step.key" class="item__body">
           <StepDetail :step="step" :today="today" />
           <div class="actions">
             <UiButton v-if="step.id === 'report'" arrow @click="$emit('report')">Preparar el resumen</UiButton>
-            <UiButton v-else @click="$emit('markDone', step.id)">Marcar como hecho</UiButton>
-            <UiButton variant="secondary" @click="$emit('open', step.id)">Ver paso</UiButton>
+            <UiButton v-else @click="$emit('markDone', step.key)">Marcar como hecho</UiButton>
+            <UiButton variant="secondary" @click="$emit('open', step.key)">Ver paso</UiButton>
           </div>
         </div>
         <div v-else class="item__collapsed">
-          <UiButton variant="secondary" :aria-label="`Ver paso: ${step.title}`" @click="$emit('open', step.id)">
+          <UiButton variant="secondary" :aria-label="`Ver paso: ${step.title}`" @click="$emit('open', step.key)">
             Ver paso
           </UiButton>
         </div>

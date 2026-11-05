@@ -6,7 +6,8 @@ describe("parseHash", () => {
     ["", { screen: "inicio" }],
     ["#/", { screen: "inicio" }],
     ["#/plan", { screen: "plan" }],
-    ["#/paso/phone", { screen: "paso", stepId: "phone" }],
+    ["#/paso/phone", { screen: "paso", stepKey: "phone" }],
+    ["#/paso/card:banco-a", { screen: "paso", stepKey: "card:banco-a" }],
     ["#/paso/unknown-step", { screen: "plan" }],
     ["#/nope", { screen: "inicio" }],
     ["#que-se-llevaron", { screen: "inicio" }],
@@ -36,20 +37,20 @@ describe("resolveRoute", () => {
   });
 
   it("sends a step that is not in the plan back to the plan", () => {
-    expect(resolveRoute({ screen: "paso", stepId: "card" }, true, ["phone"])).toEqual({ screen: "plan" });
+    expect(resolveRoute({ screen: "paso", stepKey: "card" }, true, ["phone"])).toEqual({ screen: "plan" });
   });
 
   it("keeps a valid step", () => {
-    expect(resolveRoute({ screen: "paso", stepId: "phone" }, true, ["phone"])).toEqual({
+    expect(resolveRoute({ screen: "paso", stepKey: "phone" }, true, ["phone"])).toEqual({
       screen: "paso",
-      stepId: "phone",
+      stepKey: "phone",
     });
   });
 });
 
 describe("sameRoute", () => {
   it("compares screen and step", () => {
-    expect(sameRoute({ screen: "paso", stepId: "phone" }, { screen: "paso", stepId: "phone" })).toBe(true);
-    expect(sameRoute({ screen: "paso", stepId: "phone" }, { screen: "paso", stepId: "card" })).toBe(false);
+    expect(sameRoute({ screen: "paso", stepKey: "phone" }, { screen: "paso", stepKey: "phone" })).toBe(true);
+    expect(sameRoute({ screen: "paso", stepKey: "phone" }, { screen: "paso", stepKey: "card" })).toBe(false);
   });
 });

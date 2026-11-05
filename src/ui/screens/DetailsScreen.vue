@@ -20,8 +20,15 @@ const form = reactive<Details>({ ...props.initial });
 function submit() {
   const details: Details = {};
   if (props.askOperator) details.operatorId = form.operatorId ?? UNKNOWN;
-  if (props.askBank) details.bankId = form.bankId ?? UNKNOWN;
+  if (props.askBank) details.bankIds = form.bankIds?.length ? form.bankIds : [UNKNOWN];
   emit("submit", details);
+}
+
+/** Several banks can be chosen; «No lo sé» excludes them. */
+function toggleBank(id: string, checked: boolean) {
+  const others = (form.bankIds ?? []).filter((bankId) => bankId !== id && bankId !== UNKNOWN);
+  if (id === UNKNOWN) form.bankIds = checked ? [UNKNOWN] : [];
+  else form.bankIds = checked ? [...others, id] : others;
 }
 </script>
 
@@ -43,15 +50,26 @@ function submit() {
       </fieldset>
 
       <fieldset v-if="askBank" class="group">
-        <legend class="group__legend">¿De qué banco es tu tarjeta?</legend>
+        <legend class="group__legend">¿De qué banco son tus tarjetas?</legend>
+        <p class="group__hint">Elige todos los que apliquen.</p>
         <label v-for="bank in banks" :key="bank.id" class="choice">
-          <input v-model="form.bankId" type="radio" name="bank" :value="bank.id" />
+          <input
+            type="checkbox"
+            name="bank"
+            :checked="form.bankIds?.includes(bank.id)"
+            @change="toggleBank(bank.id, ($event.target as HTMLInputElement).checked)"
+          />
           <img v-if="bank.logo" class="choice__logo" :src="bank.logo" alt="" width="28" height="28" />
           <span>{{ bank.name }}</span>
           <span v-if="isExpired(bank, today)" class="choice__flag">dato vencido</span>
         </label>
         <label class="choice">
-          <input v-model="form.bankId" type="radio" name="bank" :value="UNKNOWN" />
+          <input
+            type="checkbox"
+            name="bank"
+            :checked="form.bankIds?.includes(UNKNOWN)"
+            @change="toggleBank(UNKNOWN, ($event.target as HTMLInputElement).checked)"
+          />
           <span>No lo sé</span>
         </label>
       </fieldset>
@@ -85,6 +103,13 @@ function submit() {
   font-size: 20px;
   font-weight: 700;
   line-height: 1.25;
+}
+
+.group__hint {
+  margin: 0 0 var(--space-xs);
+  color: var(--color-ink-soft);
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .choice {

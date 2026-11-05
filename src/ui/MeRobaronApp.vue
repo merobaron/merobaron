@@ -11,7 +11,6 @@ import {
   type AssetId,
   type Details,
   type Selection,
-  type StepId,
 } from "../domain/plan";
 import { isPlanComplete, markDone, markPending, progressLabel } from "../domain/progress";
 import { emptyReport, type ReportDraft } from "../domain/report";
@@ -50,7 +49,7 @@ const ready = ref(false);
 const route = ref<Route>(START);
 const selection = ref<Selection | null>(null);
 const details = ref<Details>({});
-const done = ref<StepId[]>([]);
+const done = ref<string[]>([]);
 const report = ref<ReportDraft>(emptyReport());
 /** Whether the last write to localStorage worked. */
 const saved = ref(false);
@@ -62,8 +61,8 @@ const announcement = ref("");
 const root = ref<HTMLElement | null>(null);
 
 const steps = computed(() => (selection.value ? buildPlan(selection.value, details.value, props.content, today.value) : []));
-const stepIds = computed(() => steps.value.map((step) => step.id));
-const activeStep = computed(() => steps.value.find((step) => step.id === route.value.stepId));
+const stepKeys = computed(() => steps.value.map((step) => step.key));
+const activeStep = computed(() => steps.value.find((step) => step.key === route.value.stepKey));
 const emergencyStep = computed(() =>
   details.value.operatorId
     ? buildPlan({ assets: ["phone"], unknown: false }, { operatorId: details.value.operatorId }, props.content, today.value)[0]
@@ -74,10 +73,10 @@ const lineBlocked = computed(() => done.value.includes("phone") && (selection.va
 const savedProgress = computed(() =>
   saved.value && selection.value ? progressLabel(steps.value, done.value) : undefined,
 );
-const pendingOptional = computed(() => steps.value.filter((step) => step.optional && !done.value.includes(step.id)));
+const pendingOptional = computed(() => steps.value.filter((step) => step.optional && !done.value.includes(step.key)));
 
 function resolve(target: Route): Route {
-  return resolveRoute(target, selection.value !== null, stepIds.value);
+  return resolveRoute(target, selection.value !== null, stepKeys.value);
 }
 
 /** Focuses the first element matching one of the selectors, in order of preference. */
@@ -202,9 +201,9 @@ function saveDetails(value: Details): void {
   navigate({ screen: "plan" });
 }
 
-function completeStep(id: StepId, from: "plan" | "paso"): void {
+function completeStep(key: string, from: "plan" | "paso"): void {
   const wasComplete = isPlanComplete(steps.value, done.value);
-  done.value = markDone(done.value, id);
+  done.value = markDone(done.value, key);
   if (!wasComplete && isPlanComplete(steps.value, done.value)) {
     navigate({ screen: "completo" });
     return;
@@ -217,8 +216,8 @@ function completeStep(id: StepId, from: "plan" | "paso"): void {
   void focusAfterRender(".item--current .item__title", "[data-screen-heading]");
 }
 
-function reopenStep(id: StepId): void {
-  done.value = markPending(done.value, id);
+function reopenStep(key: string): void {
+  done.value = markPending(done.value, key);
 }
 
 watch([selection, details, done, report], persist, { deep: true });
@@ -296,7 +295,7 @@ onBeforeUnmount(() => {
       :done="done"
       :today="today"
       :general="selection?.unknown ?? false"
-      @open="navigate({ screen: 'paso', stepId: $event })"
+      @open="navigate({ screen: 'paso', stepKey: $event })"
       @mark-done="completeStep($event, 'plan')"
       @change-selection="navigate({ screen: 'selector' })"
       @report="navigate({ screen: 'denuncia' })"
@@ -307,10 +306,10 @@ onBeforeUnmount(() => {
     <StepScreen
       v-else-if="route.screen === 'paso' && activeStep"
       :step="activeStep"
-      :done="done.includes(activeStep.id)"
+      :done="done.includes(activeStep.key)"
       :today="today"
-      @mark-done="completeStep(activeStep.id, 'paso')"
-      @mark-pending="reopenStep(activeStep.id)"
+      @mark-done="completeStep(activeStep.key, 'paso')"
+      @mark-pending="reopenStep(activeStep.key)"
       @back="navigate({ screen: 'plan' })"
     >
       <UiButton v-if="activeStep.id === 'report'" arrow @click="navigate({ screen: 'denuncia' })">
@@ -332,7 +331,7 @@ onBeforeUnmount(() => {
     <DoneScreen
       v-else-if="route.screen === 'completo'"
       :pending-optional="pendingOptional"
-      @open="navigate({ screen: 'paso', stepId: $event })"
+      @open="navigate({ screen: 'paso', stepKey: $event })"
       @back="navigate({ screen: 'plan' })"
     >
       <DataNotice :saved="saved" @delete="navigate({ screen: 'borrar' })" />

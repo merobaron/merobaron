@@ -92,6 +92,17 @@ describe("parseSavedPlan", () => {
     });
   });
 
+  it("reads plans saved with a single bank", () => {
+    const parsed = parseSavedPlan({ ...plan, details: { bankId: "banco-a" }, done: ["card", "report"] });
+    expect(parsed?.details).toEqual({ bankIds: ["banco-a"] });
+    expect(parsed?.done).toEqual(["card:banco-a", "report"]);
+  });
+
+  it("keeps the chosen banks, without duplicates or junk", () => {
+    const parsed = parseSavedPlan({ ...plan, details: { bankIds: ["banco-a", 3, "", "banco-b", "banco-a"] } });
+    expect(parsed?.details).toEqual({ bankIds: ["banco-a", "banco-b"] });
+  });
+
   it("keeps a valid report draft", () => {
     const report = { when: "Hoy", where: "Calle 1", what: "", filed: "yes", number: "DEN-0000" };
     expect(parseSavedPlan({ ...plan, report })?.report).toEqual(report);

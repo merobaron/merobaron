@@ -4,7 +4,7 @@ import ScreenShell from "../ScreenShell.vue";
 import UiButton from "../UiButton.vue";
 
 defineProps<{ pendingOptional: PlanStep[] }>();
-defineEmits<{ back: []; open: [id: PlanStep["id"]] }>();
+defineEmits<{ back: []; open: [key: string] }>();
 </script>
 
 <template>
@@ -12,8 +12,8 @@ defineEmits<{ back: []; open: [id: PlanStep["id"]] }>();
     <div v-if="pendingOptional.length > 0" class="optional">
       <h2 class="optional__title">Te recomendamos también</h2>
       <ul class="optional__list">
-        <li v-for="step in pendingOptional" :key="step.id">
-          <UiButton variant="secondary" @click="$emit('open', step.id)">{{ step.title }}</UiButton>
+        <li v-for="step in pendingOptional" :key="step.key">
+          <UiButton variant="secondary" @click="$emit('open', step.key)">{{ step.title }}</UiButton>
         </li>
       </ul>
     </div>

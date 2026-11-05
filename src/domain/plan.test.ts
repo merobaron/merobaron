@@ -69,6 +69,22 @@ describe("buildPlan", () => {
     expect(steps.find((step) => step.id === "passwords")?.expired).toBe(true);
   });
 
+  it("adds one card step per chosen bank, in the order chosen", () => {
+    const content = exampleContent();
+    content.entities.push({ ...content.entities.find((entity) => entity.id === "banco-a")!, id: "banco-b", name: "banco-b" });
+    const cards = buildPlan({ assets: ["debit-card"], unknown: false }, { bankIds: ["banco-b", "banco-a"] }, content, TODAY).filter(
+      (step) => step.id === "card",
+    );
+    expect(cards.map((step) => step.key)).toEqual(["card:banco-b", "card:banco-a"]);
+    expect(cards.map((step) => step.title)).toEqual(["card de banco-b", "card de banco-a"]);
+  });
+
+  it("keeps a single card step when the bank is unknown", () => {
+    const cards = plan(["debit-card"], { bankIds: ["unknown"] }).filter((step) => step.id === "card");
+    expect(cards.map((step) => [step.key, step.title])).toEqual([["card", "card"]]);
+    expect(cards[0].instructions[0]).toBe("Busca tu banco.");
+  });
+
   it("explains what to do when the operator is unknown", () => {
     const phone = plan(["phone"], { operatorId: "unknown" })[0];
     expect(phone.entity).toBeUndefined();

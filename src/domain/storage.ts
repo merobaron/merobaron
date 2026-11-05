@@ -1,4 +1,4 @@
-import { isAssetId, isStepId, type Details, type Selection, type StepId } from "./plan";
+import { cardKey, isAssetId, isStepKey, type Details, type Selection } from "./plan";
 import { parseReport, type ReportDraft } from "./report";
 
 /** The only key the site writes. Bump the version suffix on breaking changes. */
@@ -14,7 +14,7 @@ export interface SavedPlan {
   version: 1;
   selection: Selection;
   details: Details;
-  done: StepId[];
+  done: string[];
   report?: ReportDraft;
 }
 
@@ -40,9 +40,11 @@ function parseDetails(value: unknown): Details {
   if (!isRecord(value)) return {};
   const details: Details = {};
   const operatorId = optionalString(value.operatorId);
-  const bankId = optionalString(value.bankId);
+  // Plans saved before multiple banks have a single `bankId`.
+  const bankIds = Array.isArray(value.bankIds) ? value.bankIds.map(optionalString) : [optionalString(value.bankId)];
+  const validBankIds = [...new Set(bankIds.filter((id) => id !== undefined))];
   if (operatorId) details.operatorId = operatorId;
-  if (bankId) details.bankId = bankId;
+  if (validBankIds.length > 0) details.bankIds = validBankIds;
   return details;
 }
 
@@ -52,11 +54,14 @@ export function parseSavedPlan(value: unknown): SavedPlan | null {
   const assets = Array.isArray(value.selection.assets) ? value.selection.assets.filter(isAssetId) : [];
   const unknown = value.selection.unknown === true;
   if (assets.length === 0 && !unknown) return null;
-  const done = Array.isArray(value.done) ? value.done.filter(isStepId) : [];
+  const details = parseDetails(value.details);
+  // Before multiple banks, the card step was always "card"; point it at the saved bank.
+  const legacyCard = details.bankIds?.length === 1 ? cardKey(details.bankIds[0]) : "card";
+  const done = Array.isArray(value.done) ? value.done.filter(isStepKey).map((key) => (key === "card" ? legacyCard : key)) : [];
   const plan: SavedPlan = {
     version: 1,
     selection: { assets: [...new Set(assets)], unknown },
-    details: parseDetails(value.details),
+    details,
     done: [...new Set(done)],
   };
   const report = parseReport(value.report);

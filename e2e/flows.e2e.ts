@@ -28,7 +28,6 @@ test.describe("A. main flow", () => {
     await choose(page, /CELULAR/, /TARJETA DE CRÉDITO/);
     await expectScreen(page, "#/detalles", "DETALLES");
     await page.getByLabel("Claro", { exact: true }).check();
-    await page.getByLabel("Sí, lo tengo").check();
     await page.getByLabel("Bancolombia", { exact: true }).check();
     await expectAccessible(page);
     await expectNoHorizontalScroll(page);
@@ -36,7 +35,7 @@ test.describe("A. main flow", () => {
 
     await expectScreen(page, "#/plan", "TU PLAN");
     const titles = page.locator(".item__title");
-    await expect(titles).toHaveText(["Bloquea tu SIM", "Bloquea tu tarjeta", "Cambia tus claves", "Pon la denuncia"]);
+    await expect(titles).toHaveText(["Bloquea tu SIM", "Bloquea tu tarjeta de Bancolombia", "Cambia tus claves", "Pon la denuncia"]);
     await expect(page.locator(".summary__label")).toHaveText("0 de 4 hechas");
     // Only the current step is open, with its official data.
     await expect(page.locator(".item__body")).toHaveCount(1);
@@ -53,7 +52,7 @@ test.describe("A. main flow", () => {
 
     await current.getByRole("button", { name: "Marcar como hecho" }).click();
     await expect(page.locator(".summary__label")).toHaveText("1 de 4 hechas");
-    await expect(page.locator(".item--current .item__title")).toHaveText("Bloquea tu tarjeta");
+    await expect(page.locator(".item--current .item__title")).toHaveText("Bloquea tu tarjeta de Bancolombia");
     await expect(page.locator(".item--current .item__title")).toBeFocused();
 
     await page.getByRole("button", { name: "Ver paso: Cambia tus claves" }).click();

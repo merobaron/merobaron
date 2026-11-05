@@ -17,11 +17,14 @@ export interface Selection {
 
 export interface Details {
   operatorId?: string;
-  bankId?: string;
+  /** One plan step per bank, in the order they were chosen. */
+  bankIds?: string[];
 }
 
 export interface PlanStep {
   id: StepId;
+  /** Unique within the plan: the step id, plus the bank for card steps (`card:nu`). */
+  key: string;
   title: string;
   urgency: Urgency;
   instructions: string[];
@@ -55,6 +58,14 @@ export function isStepId(value: unknown): value is StepId {
   return typeof value === "string" && (STEP_IDS as readonly string[]).includes(value);
 }
 
+export function isStepKey(value: unknown): value is string {
+  return typeof value === "string" && isStepId(value.split(":")[0]);
+}
+
+export function cardKey(bankId: string | undefined): string {
+  return bankId && bankId !== UNKNOWN ? `card:${bankId}` : "card";
+}
+
 export function needsOperator(selection: Selection): boolean {
   return !selection.unknown && selection.assets.includes("phone");
 }
@@ -82,17 +93,17 @@ export function stepIdsFor(selection: Selection): StepId[] {
   return ids;
 }
 
-function chosenEntityId(guide: Guide, details: Details): string | undefined {
+function chosenEntityId(guide: Guide, details: Details, bankId: string | undefined): string | undefined {
   if (guide.entityKind === "operador") return details.operatorId;
-  if (guide.entityKind === "banco") return details.bankId;
+  if (guide.entityKind === "banco") return bankId;
   return undefined;
 }
 
-function resolveEntity(guide: Guide, details: Details, entities: Entity[]): Entity | undefined {
+function resolveEntity(guide: Guide, details: Details, bankId: string | undefined, entities: Entity[]): Entity | undefined {
   if (!guide.entityKind) return undefined;
   const ofKind = entities.filter((entity) => entity.kind === guide.entityKind);
   if (guide.entityKind === "operador" || guide.entityKind === "banco") {
-    const id = chosenEntityId(guide, details);
+    const id = chosenEntityId(guide, details, bankId);
     return ofKind.find((entity) => entity.id === id);
   }
   return ofKind[0];
@@ -106,12 +117,21 @@ function instructionsFor(guide: Guide, entity: Entity | undefined): string[] {
   return instructions;
 }
 
-function toStep(id: StepId, guide: Guide, selection: Selection, details: Details, content: Content, today: string): PlanStep {
-  const entity = resolveEntity(guide, details, content.entities);
+function toStep(
+  id: StepId,
+  guide: Guide,
+  selection: Selection,
+  details: Details,
+  bankId: string | undefined,
+  content: Content,
+  today: string,
+): PlanStep {
+  const entity = resolveEntity(guide, details, bankId, content.entities);
   const optional = id === "report" && !selection.assets.some((asset) => REPORT_REQUIRED_FOR.includes(asset));
   return {
     id,
-    title: guide.title,
+    key: id === "card" ? cardKey(bankId) : id,
+    title: id === "card" && entity ? `${guide.title} de ${entity.name}` : guide.title,
     urgency: guide.urgency,
     instructions: instructionsFor(guide, entity),
     whatToSay: guide.whatToSay,
@@ -126,12 +146,14 @@ function toStep(id: StepId, guide: Guide, selection: Selection, details: Details
   };
 }
 
-/** Builds the plan for a selection, ordered by urgency. The phone always comes first. */
+/** Builds the plan for a selection, ordered by urgency. The phone always comes first. Sorting is stable, so banks keep their order. */
 export function buildPlan(selection: Selection, details: Details, content: Content, today: string): PlanStep[] {
   const steps: PlanStep[] = [];
   for (const id of stepIdsFor(selection)) {
     const guide = content.guides.find((candidate) => candidate.id === id);
-    if (guide) steps.push(toStep(id, guide, selection, details, content, today));
+    if (!guide) continue;
+    const bankIds = id === "card" && details.bankIds?.length ? details.bankIds : [undefined];
+    for (const bankId of bankIds) steps.push(toStep(id, guide, selection, details, bankId, content, today));
   }
   const rank = (step: PlanStep) => (step.id === "phone" ? -1 : URGENCY_RANK[step.urgency]);
   return steps.sort((a, b) => rank(a) - rank(b) || STEP_ORDER[a.id] - STEP_ORDER[b.id]);
