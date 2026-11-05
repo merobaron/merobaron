@@ -19,10 +19,7 @@ const form = reactive<Details>({ ...props.initial });
 
 function submit() {
   const details: Details = {};
-  if (props.askOperator) {
-    details.operatorId = form.operatorId ?? UNKNOWN;
-    if (form.imei) details.imei = form.imei;
-  }
+  if (props.askOperator) details.operatorId = form.operatorId ?? UNKNOWN;
   if (props.askBank) details.bankId = form.bankId ?? UNKNOWN;
   emit("submit", details);
 }
@@ -41,19 +38,6 @@ function submit() {
         <label class="choice">
           <input v-model="form.operatorId" type="radio" name="operator" :value="UNKNOWN" />
           <span>No lo sé</span>
-        </label>
-      </fieldset>
-
-      <fieldset v-if="askOperator" class="group">
-        <legend class="group__legend">¿Tienes el IMEI de tu celular?</legend>
-        <p class="group__hint">Es un número de 15 dígitos. Suele estar en la caja o en la factura.</p>
-        <label class="choice">
-          <input v-model="form.imei" type="radio" name="imei" value="yes" />
-          <span>Sí, lo tengo</span>
-        </label>
-        <label class="choice">
-          <input v-model="form.imei" type="radio" name="imei" value="no" />
-          <span>No lo tengo</span>
         </label>
       </fieldset>
 
@@ -99,13 +83,6 @@ function submit() {
   font-size: 20px;
   font-weight: 700;
   line-height: 1.25;
-}
-
-.group__hint {
-  margin: 0 0 var(--space-xs);
-  color: var(--color-ink-soft);
-  font-size: 16px;
-  line-height: 1.5;
 }
 
 .choice {

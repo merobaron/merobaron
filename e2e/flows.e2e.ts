@@ -82,12 +82,11 @@ test.describe("A. main flow", () => {
     await page.getByRole("button", { name: "Empezar" }).click();
     await choose(page, /CELULAR/);
     await page.getByLabel(/^Claro/).check();
-    await page.getByLabel("No lo tengo").check();
     await page.getByRole("button", { name: "Ver mi plan" }).click();
     const current = page.locator(".item--current");
     await expect(current.getByText("Dato vencido.")).toBeVisible();
     await expect(current.getByText("Vencido", { exact: true })).toBeVisible();
-    await expect(current.getByText(/El IMEI suele estar en la caja/)).toBeVisible();
+    await expect(current.getByText(/Busca el IMEI de tu celular/)).toBeVisible();
   });
 });
 

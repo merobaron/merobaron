@@ -18,7 +18,6 @@ export interface Selection {
 export interface Details {
   operatorId?: string;
   bankId?: string;
-  imei?: "yes" | "no";
 }
 
 export interface PlanStep {
@@ -99,11 +98,11 @@ function resolveEntity(guide: Guide, details: Details, entities: Entity[]): Enti
   return ofKind[0];
 }
 
-function instructionsFor(guide: Guide, entity: Entity | undefined, details: Details): string[] {
+function instructionsFor(guide: Guide, entity: Entity | undefined): string[] {
   const instructions = guide.whatToSay ? [] : [...guide.steps];
   const asksForEntity = guide.entityKind === "operador" || guide.entityKind === "banco";
   if (asksForEntity && !entity && guide.ifEntityUnknown) instructions.unshift(guide.ifEntityUnknown);
-  if (guide.id === "phone" && details.imei === "no" && guide.ifImeiUnknown) instructions.push(guide.ifImeiUnknown);
+  if (guide.id === "phone" && guide.ifImeiUnknown) instructions.push(guide.ifImeiUnknown);
   return instructions;
 }
 
@@ -114,7 +113,7 @@ function toStep(id: StepId, guide: Guide, selection: Selection, details: Details
     id,
     title: guide.title,
     urgency: guide.urgency,
-    instructions: instructionsFor(guide, entity, details),
+    instructions: instructionsFor(guide, entity),
     whatToSay: guide.whatToSay,
     notice: guide.notice,
     optional,

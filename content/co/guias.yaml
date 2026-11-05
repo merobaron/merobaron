@@ -10,10 +10,10 @@
     - Pide que suspendan tu línea.
     - Pide que bloqueen tu equipo con el IMEI.
     - Anota el número de referencia que te den.
-  que_decir: Pide que suspendan tu línea y que bloqueen tu celular por robo con el IMEI. Anota el número de referencia que te den.
+  que_decir: Pide que suspendan tu línea y que bloqueen tu celular por robo con el IMEI. Si no lo tienes, pregunta cómo bloquearlo sin él. Anota el número de referencia que te den.
   aviso: Bloquear el equipo dificulta que lo usen, pero no garantiza que quede inservible.
   sin_entidad: Si no sabes cuál es tu operador, busca el nombre en una factura o en el empaque de la SIM, o pregúntale a alguien que te haya llamado a ese número.
-  sin_imei: El IMEI suele estar en la caja o en la factura del celular. Si no lo tienes, pide la suspensión con tu número de línea y pregunta al operador cómo bloquear el equipo.
+  sin_imei: Busca el IMEI de tu celular, suele estar en la caja o en la factura.
   referencia_ejemplo: GES-0001
   fuente: https://ejemplo.com/guias/bloqueo-de-linea
   verificado: 2026-11-01

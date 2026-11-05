@@ -43,7 +43,6 @@ function parseDetails(value: unknown): Details {
   const bankId = optionalString(value.bankId);
   if (operatorId) details.operatorId = operatorId;
   if (bankId) details.bankId = bankId;
-  if (value.imei === "yes" || value.imei === "no") details.imei = value.imei;
   return details;
 }
 

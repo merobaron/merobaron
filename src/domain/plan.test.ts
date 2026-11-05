@@ -75,12 +75,9 @@ describe("buildPlan", () => {
     expect(phone.instructions[0]).toBe("Busca tu operador.");
   });
 
-  it("explains where to find the IMEI when the person does not have it", () => {
-    const phone = plan(["phone"], { operatorId: "operador-a", imei: "no" })[0];
+  it("always explains where to find the IMEI", () => {
+    const phone = plan(["phone"], { operatorId: "operador-a" })[0];
     expect(phone.instructions.at(-1)).toBe("Busca el IMEI en la caja.");
-    expect(plan(["phone"], { operatorId: "operador-a", imei: "yes" })[0].instructions).not.toContain(
-      "Busca el IMEI en la caja.",
-    );
   });
 
   it("shows what to say instead of the steps, keeping the situational hints", () => {
@@ -88,7 +85,7 @@ describe("buildPlan", () => {
     content.guides = content.guides.map((guide) =>
       guide.id === "phone" ? { ...guide, whatToSay: "Pide que suspendan tu línea." } : guide,
     );
-    const phone = buildPlan({ assets: ["phone"], unknown: false }, { imei: "no" }, content, TODAY)[0];
+    const phone = buildPlan({ assets: ["phone"], unknown: false }, {}, content, TODAY)[0];
     expect(phone.whatToSay).toBe("Pide que suspendan tu línea.");
     expect(phone.instructions).toEqual(["Busca tu operador.", "Busca el IMEI en la caja."]);
   });

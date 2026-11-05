@@ -26,7 +26,7 @@ const throwingStorage: StorageLike = {
 const plan: SavedPlan = {
   version: 1,
   selection: { assets: ["phone"], unknown: false },
-  details: { operatorId: "operador-a", imei: "no" },
+  details: { operatorId: "operador-a" },
   done: ["phone"],
 };
 

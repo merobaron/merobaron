@@ -33,7 +33,7 @@ export interface Guide extends Verifiable {
   notice?: string;
   /** Instruction shown when the person does not know which entity to call. */
   ifEntityUnknown?: string;
-  /** Instruction shown when the person does not have the phone IMEI. */
+  /** Tip on where to find the phone IMEI, always shown in the phone step. */
   ifImeiUnknown?: string;
   sampleReference?: string;
 }
