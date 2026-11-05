@@ -7,12 +7,15 @@ const props = defineProps<{ step: PlanStep; today: string }>();
 
 const headingId = useId();
 const entityExpired = computed(() => props.step.entity !== undefined && isExpired(props.step.entity, props.today));
+const isExample = computed(() => new URL(props.step.entity?.source ?? props.step.source).hostname === "ejemplo.com");
 </script>
 
 <template>
   <section class="example" :aria-labelledby="headingId">
-    <h3 :id="headingId" class="example__title">Datos de ejemplo</h3>
-    <p class="example__note">Estos datos no son reales. Confirma siempre en los canales oficiales.</p>
+    <h3 :id="headingId" class="example__title">{{ isExample ? "Datos de ejemplo" : "Datos oficiales" }}</h3>
+    <p class="example__note">
+      {{ isExample ? "Estos datos no son reales. Confirma siempre en los canales oficiales." : "Tomados de la fuente oficial. Si algo no coincide, sigue lo que diga la fuente." }}
+    </p>
     <dl class="example__list">
       <template v-if="step.entity">
         <div>

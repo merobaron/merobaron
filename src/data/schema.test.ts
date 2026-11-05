@@ -37,15 +37,6 @@ describe("content files", () => {
       expect.arrayContaining(["phone", "card", "passwords", "report", "id-card", "documents", "general"]),
     );
   });
-
-  it("only contains example data", () => {
-    for (const entry of [...entities, ...guides]) {
-      for (const key of ["fuente", "enlace"]) {
-        if (entry[key] !== undefined) expect(new URL(String(entry[key])).hostname).toBe("ejemplo.com");
-      }
-      if (entry.linea_robo !== undefined) expect(entry.linea_robo).toMatch(/^000 000 000\d$/);
-    }
-  });
 });
 
 describe("entitySchema", () => {
