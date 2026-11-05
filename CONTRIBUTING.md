@@ -30,7 +30,7 @@ No incluyas datos personales en issues, PR ni capturas de pantalla, ni tuyos ni 
 
 ## Licencia de tus aportes
 
-Al contribuir aceptas que tu aporte se publique bajo la licencia de la carpeta que modificas: CC BY-SA 4.0 en `content/` y AGPL-3.0-only en el resto del repositorio. Las screenshots de `content/*/evidencia/` no se licencian: son páginas de cada entidad.
+Al contribuir aceptas que tu aporte se publique bajo la licencia de la carpeta que modificas: CC BY-SA 4.0 en `content/` y AGPL-3.0-only en el resto del repositorio. Las screenshots de `content/*/evidencia/` y los logos de `content/*/logos/` no se licencian: son páginas y marcas de cada entidad.
 
 ## Convivencia
 

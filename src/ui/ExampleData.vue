@@ -20,7 +20,10 @@ const callHref = computed(() => `tel:${props.step.entity?.theftLine?.replace(/\D
     <div v-if="step.entity" class="data__action">
       <p v-if="step.entity.theftLine" class="data__call-label">Línea de robo</p>
       <p class="data__row">
-        <span class="data__entity">{{ step.entity.name }}</span>
+        <span class="data__entity">
+          <img v-if="step.entity.logo" class="data__logo" :src="step.entity.logo" alt="" width="24" height="24" />
+          {{ step.entity.name }}
+        </span>
         <a
           v-if="step.entity.theftLine"
           class="data__call"
@@ -136,8 +139,17 @@ const callHref = computed(() => `tel:${props.step.entity?.theftLine?.replace(/\D
 }
 
 .data__entity {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
   font-size: 20px;
   font-weight: 700;
+}
+
+.data__logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .data__call {

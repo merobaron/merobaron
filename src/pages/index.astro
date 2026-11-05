@@ -12,10 +12,20 @@ const screenshots = import.meta.glob<string>("../../content/co/evidencia/*.png",
   import: "default",
 });
 
+const logos = import.meta.glob<string>("../../content/co/logos/*.png", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
 const content: Content = {
   entities: (await getCollection("entidades")).map((entry) => {
     const entity = toEntity(entry.data);
-    return { ...entity, evidence: entity.evidence && screenshots[`../../${entity.evidence}`] };
+    return {
+      ...entity,
+      evidence: entity.evidence && screenshots[`../../${entity.evidence}`],
+      logo: logos[`../../content/co/logos/${entity.id}.png`],
+    };
   }),
   guides: (await getCollection("guias")).map((entry) => toGuide(entry.data)),
 };

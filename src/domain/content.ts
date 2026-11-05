@@ -20,6 +20,7 @@ export interface Entity extends Verifiable {
   quote?: string;
   archive?: string;
   evidence?: string;
+  logo?: string;
 }
 
 export interface Guide extends Verifiable {
