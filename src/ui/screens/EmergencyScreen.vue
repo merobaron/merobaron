@@ -34,7 +34,7 @@ watch(choice, (id) => {
       <h2 id="emergency-guide-title" class="guide__title">
         {{ step.entity ? `Llama a ${step.entity.name}` : "Llama a tu operador" }}
       </h2>
-      <StepDetail :step="step" :today="today" />
+      <StepDetail :step="step" :today="today" :cta="false" />
     </section>
 
     <div class="actions">

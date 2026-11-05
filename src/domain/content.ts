@@ -29,6 +29,7 @@ export interface Guide extends Verifiable {
   urgency: Urgency;
   entityKind?: EntityKind;
   steps: string[];
+  whatToSay?: string;
   notice?: string;
   /** Instruction shown when the person does not know which entity to call. */
   ifEntityUnknown?: string;

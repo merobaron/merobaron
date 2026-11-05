@@ -26,6 +26,7 @@ export interface PlanStep {
   title: string;
   urgency: Urgency;
   instructions: string[];
+  whatToSay?: string;
   notice?: string;
   /** Suggested but not required, for example the report when only the ID card was taken. */
   optional: boolean;
@@ -99,7 +100,7 @@ function resolveEntity(guide: Guide, details: Details, entities: Entity[]): Enti
 }
 
 function instructionsFor(guide: Guide, entity: Entity | undefined, details: Details): string[] {
-  const instructions = [...guide.steps];
+  const instructions = guide.whatToSay ? [] : [...guide.steps];
   const asksForEntity = guide.entityKind === "operador" || guide.entityKind === "banco";
   if (asksForEntity && !entity && guide.ifEntityUnknown) instructions.unshift(guide.ifEntityUnknown);
   if (guide.id === "phone" && details.imei === "no" && guide.ifImeiUnknown) instructions.push(guide.ifImeiUnknown);
@@ -114,6 +115,7 @@ function toStep(id: StepId, guide: Guide, selection: Selection, details: Details
     title: guide.title,
     urgency: guide.urgency,
     instructions: instructionsFor(guide, entity, details),
+    whatToSay: guide.whatToSay,
     notice: guide.notice,
     optional,
     entity,

@@ -10,6 +10,7 @@
     - Pide que suspendan tu línea.
     - Pide que bloqueen tu equipo con el IMEI.
     - Anota el número de referencia que te den.
+  que_decir: Pide que suspendan tu línea y que bloqueen tu celular por robo con el IMEI. Anota el número de referencia que te den.
   aviso: Bloquear el equipo dificulta que lo usen, pero no garantiza que quede inservible.
   sin_entidad: Si no sabes cuál es tu operador, busca el nombre en una factura o en el empaque de la SIM, o pregúntale a alguien que te haya llamado a ese número.
   sin_imei: El IMEI suele estar en la caja o en la factura del celular. Si no lo tienes, pide la suspensión con tu número de línea y pregunta al operador cómo bloquear el equipo.
@@ -27,6 +28,7 @@
     - Pide que bloqueen la tarjeta.
     - Solicita una tarjeta nueva.
     - Revisa tus compras recientes y reporta las que no hiciste.
+  que_decir: Pide que bloqueen tu tarjeta y solicita una nueva. Verifica tus compras recientes y reporta las que no hiciste.
   sin_entidad: Si no sabes qué banco emitió la tarjeta, revisa tu extracto o la aplicación del banco desde otro dispositivo.
   referencia_ejemplo: GES-0002
   fuente: https://ejemplo.com/guias/bloqueo-de-tarjeta

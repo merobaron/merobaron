@@ -83,6 +83,16 @@ describe("buildPlan", () => {
     );
   });
 
+  it("shows what to say instead of the steps, keeping the situational hints", () => {
+    const content = exampleContent();
+    content.guides = content.guides.map((guide) =>
+      guide.id === "phone" ? { ...guide, whatToSay: "Pide que suspendan tu línea." } : guide,
+    );
+    const phone = buildPlan({ assets: ["phone"], unknown: false }, { imei: "no" }, content, TODAY)[0];
+    expect(phone.whatToSay).toBe("Pide que suspendan tu línea.");
+    expect(phone.instructions).toEqual(["Busca tu operador.", "Busca el IMEI en la caja."]);
+  });
+
   it("links the report to the authority without asking for it", () => {
     const report = plan(["phone"]).find((step) => step.id === "report");
     expect(report?.entity?.id).toBe("portal-denuncias");

@@ -21,7 +21,7 @@ const callHref = computed(() => `tel:${props.step.entity?.theftLine?.replace(/\D
       <p v-if="step.entity.theftLine" class="data__call-label">Línea de robo</p>
       <p class="data__row">
         <span class="data__entity">
-          <img v-if="step.entity.logo" class="data__logo" :src="step.entity.logo" alt="" width="24" height="24" />
+          <img v-if="step.entity.logo" class="data__logo" :src="step.entity.logo" alt="" width="28" height="28" />
           {{ step.entity.name }}
         </span>
         <a
@@ -41,6 +41,11 @@ const callHref = computed(() => `tel:${props.step.entity?.theftLine?.replace(/\D
         <strong v-if="entityExpired" class="data__badge">Vencido</strong>
       </p>
       <a v-if="step.entity.link" class="data__link" :href="step.entity.link" rel="noreferrer">Ir al canal oficial</a>
+    </div>
+
+    <div v-if="step.whatToSay" class="data__say">
+      <h4 class="data__say-title">¿Qué decir?</h4>
+      <p class="data__say-text">{{ step.whatToSay }}</p>
     </div>
 
     <div class="data__meta">
@@ -142,13 +147,13 @@ const callHref = computed(() => `tel:${props.step.entity?.theftLine?.replace(/\D
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
 }
 
 .data__logo {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
 }
 
@@ -188,6 +193,24 @@ const callHref = computed(() => `tel:${props.step.entity?.theftLine?.replace(/\D
   background: var(--color-warning-faded);
   color: var(--color-warning);
   font-size: 14px;
+}
+
+.data__say {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.data__say-title {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.data__say-text {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
 }
 
 .data__link {
