@@ -27,9 +27,20 @@ const verification = {
   fuente: officialUrl,
   verificado: isoDate,
   vence: isoDate,
+  publicado: isoDate.optional(),
 };
 
-function checkDates(data: { verificado: string; vence: string }, ctx: z.RefinementCtx): void {
+function checkDates(
+  data: { verificado: string; vence: string; publicado?: string },
+  ctx: z.RefinementCtx,
+): void {
+  if (data.publicado && data.publicado > data.verificado) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["publicado"],
+      message: "La fecha de publicación no puede ser posterior a la de verificación.",
+    });
+  }
   if (data.vence <= data.verificado) {
     ctx.addIssue({
       code: "custom",

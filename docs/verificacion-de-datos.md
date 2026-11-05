@@ -19,6 +19,7 @@ Cada dato debe incluir:
 | `fuente`     | Página oficial donde aparece el dato         |
 | `verificado` | Fecha en la que una persona comprobó el dato |
 | `vence`      | Fecha límite para volver a comprobarlo       |
+| `publicado`  | Opcional. Fecha de publicación o actualización que muestra la fuente. Solo si la página la muestra; nunca se estima |
 
 ```yaml
 id: operador-a
@@ -34,6 +35,10 @@ Este ejemplo es ficticio.
 ## Revisión
 
 Dos personas mantenedoras abren la fuente y comprueban que el dato aparece ahí, tal cual. No basta con revisar el diff.
+
+## Fuentes antiguas
+
+`publicado` no indica vigencia: eso lo indica `verificado`. Sirve para detectar fuentes viejas. Si tiene más de 2 años, la revisión confirma que no hay una página más reciente de la misma entidad que la reemplace.
 
 ## Vencimiento
 

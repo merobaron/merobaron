@@ -69,6 +69,15 @@ describe("entitySchema", () => {
     expect(entitySchema.safeParse(entry).success).toBe(false);
   });
 
+  it("accepts a publication date on or before the verification date", () => {
+    expect(entitySchema.safeParse({ ...validEntity, publicado: new Date("2024-02-08") }).success).toBe(true);
+    expect(entitySchema.safeParse({ ...validEntity, publicado: new Date("2026-11-01") }).success).toBe(true);
+  });
+
+  it("rejects a publication date after the verification date", () => {
+    expect(entitySchema.safeParse({ ...validEntity, publicado: new Date("2026-11-02") }).success).toBe(false);
+  });
+
   it("accepts quoted ISO dates", () => {
     const entry = { ...validEntity, verificado: "2026-11-01", vence: "2027-02-01" };
     expect(entitySchema.safeParse(entry).success).toBe(true);
