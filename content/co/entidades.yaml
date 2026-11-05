@@ -78,6 +78,18 @@
   verificado: 2026-11-02
   vence: 2027-02-02
 
+- id: nu
+  nombre: Nu Colombia
+  tipo: banco
+  linea_robo: "01 800 917 2000"
+  fuente: https://blog.nu.com.co/servicio-al-cliente-nu/
+  cita: "Resto de Colombia: 01 800 917 2000"
+  archivo: https://web.archive.org/web/20261105015202/https://blog.nu.com.co/servicio-al-cliente-nu/
+  captura: evidencia/nu.png
+  publicado: 2024-04-25
+  verificado: 2026-11-02
+  vence: 2027-02-02
+
 - id: operador-a
   nombre: Operador A
   tipo: operador
