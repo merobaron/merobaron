@@ -55,9 +55,12 @@ const callHref = computed(() => `tel:${props.step.entity?.theftLine?.replace(/\D
         <div>
           <dt>Fuente</dt>
           <dd class="data__mono">
-            <a :href="quoteUrl(step.entity?.source ?? step.source, step.entity?.quote)" rel="noreferrer">{{
-              step.entity?.source ?? step.source
-            }}</a>
+            <a
+              class="data__url"
+              :href="quoteUrl(step.entity?.source ?? step.source, step.entity?.quote)"
+              rel="noreferrer"
+              >{{ step.entity?.source ?? step.source }}</a
+            >
           </dd>
         </div>
         <div v-if="step.entity?.archive">
@@ -286,6 +289,19 @@ dd {
   font-family: ui-monospace, monospace;
   font-size: 14px;
   overflow-wrap: anywhere;
+}
+
+.data__url {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.data__url:hover,
+.data__url:focus-visible {
+  white-space: normal;
+  transition: white-space 0s 100ms allow-discrete;
 }
 
 .data__evidence {
