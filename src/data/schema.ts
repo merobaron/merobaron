@@ -1,6 +1,5 @@
 import { z } from "astro/zod";
 import type { Entity, Guide } from "../domain/content";
-// ponytail: one country for now; pass the list in when a second country arrives.
 import official from "../../content/co/fuentes-oficiales.json";
 
 const isoDate = z
@@ -11,7 +10,6 @@ const isoDate = z
 
 const httpsUrl = z.url({ protocol: /^https$/, error: "Usa un enlace https." });
 
-/** True when the URL is on an official domain or one of its subdomains. */
 export function isOfficial(url: string, domains: readonly string[] = official.dominios): boolean {
   const host = new URL(url).hostname;
   return domains.some((domain) => host === domain || host.endsWith(`.${domain}`));
